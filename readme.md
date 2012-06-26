@@ -6,7 +6,7 @@ Author: Muchenxuan Tong (demon386 at gmail.com)
 The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more powerful. Ideally, I hope we can bring several amazing features of [Org-mode](http://org-mode.org) of Emacs into Sublime Text 2.
 
 ## Done
-- **Smart Headline folding / unfolding**. Right now you can fold / unfold headlines by pressing **TAB** on it.
+- **Smart Headline folding / unfolding**. Right now you can fold / unfold headlines by pressing **TAB** on it. I assume you use the format: # Section; ## Subsection; ### Subsubsection
 - **Smart Order / Unordered list**. When editing lists, you can just press **ENTER** and this plugin will automatically continue the list. Once the content of the list becomes empty it will stop.
 
 ## Todo
