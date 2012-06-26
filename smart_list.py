@@ -17,13 +17,13 @@ class SmartListCommand(sublime_plugin.TextCommand):
                 insert_text = match.group(1) + \
                               str(int(match.group(2)) + 1) + \
                               match.group(3)
-                self.view.insert(edit, line_region.b, "\n" + insert_text)
+                self.view.insert(edit, region.a, "\n" + insert_text)
                 break
 
             match = UNORDER_LIST_PATTERN.match(line_content)
             if match:
                 insert_text = match.group(1) + match.group(2)
-                self.view.insert(edit, line_region.b, "\n" + insert_text)
+                self.view.insert(edit, region.a, "\n" + insert_text)
                 break
 
             match = EMPTY_LIST_PATTERN.match(line_content)
