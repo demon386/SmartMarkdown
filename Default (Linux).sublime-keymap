@@ -1,0 +1,12 @@
+[
+	{ "keys": ["tab"], "command": "smart_folding", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
+		]
+	},
+	{ "keys": ["enter"], "command": "smart_list", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
+		]
+	}
+]
