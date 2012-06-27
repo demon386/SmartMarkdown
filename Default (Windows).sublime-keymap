@@ -4,6 +4,11 @@
 			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
 		]
 	},
+	{ "keys": ["shift+tab"], "command": "global_folding", "context":
+	  	[
+			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
+		]
+	},
 	{ "keys": ["enter"], "command": "smart_list", "context":
 		[
 			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
