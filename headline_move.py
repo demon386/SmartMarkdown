@@ -52,7 +52,7 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
                                                                   level_type,\
                                                                   skip_headline_at_point=True)
                 if not match_region:
-                    match_region = sublie.Region(0, 0)
+                    match_region = sublime.Region(0, 0)
             new_sel.append(sublime.Region(match_region.a, match_region.a))
 
         self.view.sel().clear()
