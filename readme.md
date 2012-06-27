@@ -16,6 +16,11 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 - ...
 
 ## What's new
+### v0.1.2: Move between headlines supported!
+- Use **Ctrl+c Ctrl+n** to move to the next headline (any level); **Ctrl+c Ctrl+p** to the previous one.
+- Use **Ctrl+c Ctrl+f** to move to the next headline (same level or higher level); **Ctrl+c Ctrl+b** to the previous one.
+- Fixed a bug on bullet list. Thanks to quodlibet (fixed in v0.1.1).
+
 ### v0.1.0: Created!
 - Smart Headline folding / unfolding is supported.
 - Smart Lists is supported.
