@@ -15,7 +15,7 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
         level = headline.extract_level_from_headline(headline_content)
 
         if not level:
-            headline_region = headline.find_previous_headline(self.view,\
+            headline_region, _ = headline.find_previous_headline(self.view,\
                                                               from_point,\
                                                               headline.ANY_LEVEL)
             headline_content = self.view.substr(self.view.line(headline_region))
