@@ -17,7 +17,8 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
         if not level:
             headline_region, _ = headline.find_previous_headline(self.view,\
                                                               from_point,\
-                                                              headline.ANY_LEVEL)
+                                                              headline.ANY_LEVEL,
+                                                              skip_folded=True)
             headline_content = self.view.substr(self.view.line(headline_region))
             level = headline.extract_level_from_headline(headline_content)
 
@@ -41,7 +42,8 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
                                                            region.a,\
                                                            level,\
                                                            level_type,\
-                                                           skip_headline_at_point=True)
+                                                           skip_headline_at_point=True,\
+                                                           skip_folded=True)
                 if not match_region:
                     size = self.view.size()
                     match_region = sublime.Region(size, size)
@@ -50,7 +52,8 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
                                                                   region.a,\
                                                                   level,\
                                                                   level_type,\
-                                                                  skip_headline_at_point=True)
+                                                                  skip_headline_at_point=True,\
+                                                                  skip_folded=True)
                 if not match_region:
                     match_region = sublime.Region(0, 0)
             new_sel.append(sublime.Region(match_region.a, match_region.a))

@@ -8,6 +8,10 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 ## Done
 - **Smart Headline folding / unfolding**. Right now you can fold / unfold headlines by pressing **TAB** on it. I assume you use the format: # Section; ## Subsection; ### Subsubsection
 - **Smart Order / Unordered list**. When editing lists, you can just press **ENTER** and this plugin will automatically continue the list. Once the content of the list becomes empty it will stop.
+- **Move between headlines**.
+	- Use **Ctrl+c Ctrl+n** to move to the next headline (any level); **Ctrl+c Ctrl+p** to the previous one.
+	- Use **Ctrl+c Ctrl+f** to move to the next headline (same level or higher level); **Ctrl+c Ctrl+b** to the previous one.
+
 
 ## Todo
 - **Smart Table**

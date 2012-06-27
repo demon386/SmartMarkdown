@@ -63,9 +63,15 @@ def _get_new_point_if_already_in_headline(view, from_point, forward=True):
     else:
         return from_point
 
+def _is_region_folded(region, view):
+    for i in view.folded_regions():
+        if i.contains(region):
+            return True
+    return False
 
 def find_next_headline(view, from_point, level, match_type=None,
-                       skip_headline_at_point=False):
+                       skip_headline_at_point=False,
+                       skip_folded=False):
     """Return the region of the next headline or EOF.
 
     Parameters
@@ -85,6 +91,9 @@ def find_next_headline(view, from_point, level, match_type=None,
     skip_headline_at_point: boolean
         When searching whether skip the headline at point
 
+    skip_folded: boolean
+        Whether to skip the folded region
+
     Returns
     -------
     match_region: int
@@ -103,6 +112,10 @@ def find_next_headline(view, from_point, level, match_type=None,
     ## Use view.find to find the region
     re_string = _get_re_string(level, match_type)
     match_region = view.find(re_string, from_point)
+    if skip_folded:
+        while (match_region and _is_region_folded(match_region, view)):
+            from_point = match_region.b
+            match_region = view.find(re_string, from_point)
 
     if match_region:
         ## Extract the level of matched headlines according to the region
@@ -114,7 +127,8 @@ def find_next_headline(view, from_point, level, match_type=None,
 
 
 def find_previous_headline(view, from_point, level, match_type=None,
-                           skip_headline_at_point=False):
+                           skip_headline_at_point=False,
+                           skip_folded=False):
     """Return the region of the previous headline or EOF.
 
     Parameters
@@ -134,6 +148,9 @@ def find_previous_headline(view, from_point, level, match_type=None,
     skip_headline_at_point: boolean
         When searching whether skip the headline at point
 
+    skip_folded: boolean
+        Whether to skip the folded region
+
     Returns
     -------
     match_region: int
@@ -146,14 +163,16 @@ def find_previous_headline(view, from_point, level, match_type=None,
     if skip_headline_at_point:
         # Move the point to the previous lineif we are
         # current in a headline already.
-        from_point = _get_new_point_if_already_in_headline(view, from_point,
+        from_point = _get_new_point_if_already_in_headline(view, from_point,\
                                                            forward=False)
 
     re_string = _get_re_string(level, match_type)
     all_match_regions = view.find_all(re_string)
 
-    match_region = _get_neraest_previous_match_region(from_point,
-                                                      all_match_regions)
+    match_region = _get_neraest_previous_match_region(from_point,\
+                                                      all_match_regions,\
+                                                      view,\
+                                                      skip_folded)
     if match_region:
         ## Extract the level of matched headlines according to the region
         headline = view.substr(match_region)
@@ -163,7 +182,8 @@ def find_previous_headline(view, from_point, level, match_type=None,
     return (match_region, match_level)
 
 
-def _get_neraest_previous_match_region(from_point, all_match_regions):
+def _get_neraest_previous_match_region(from_point, all_match_regions, view, \
+                                       skip_folded):
     """Find the nearest previous  matched region among all matched regions.
 
     None if not found.
@@ -173,6 +193,7 @@ def _get_neraest_previous_match_region(from_point, all_match_regions):
 
     for r in all_match_regions:
         if r.b <= from_point and (not nearest_region or r.a > nearest_region.a):
-            nearest_region = r
+            if skip_folded and not _is_region_folded(r, view):
+                nearest_region = r
 
     return nearest_region
