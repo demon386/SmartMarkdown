@@ -1,9 +1,16 @@
-import sublime, sublime_plugin
+"""Smart list is used to automatially continue the current list."""
+# Author: Muchenxuan Tong <demon386@gmail.com>
+
 import re
+
+import sublime
+import sublime_plugin
+
 
 ORDER_LIST_PATTERN = re.compile(r"(\s*)(\d+)(\.\s+)\S+")
 UNORDER_LIST_PATTERN = re.compile(r"(\s*[-*]+)(\s+)\S+")
 EMPTY_LIST_PATTERN = re.compile(r"([-*]|\d+)(\.)*\s+$")
+
 
 class SmartListCommand(sublime_plugin.TextCommand):
     def run(self, edit):
