@@ -25,8 +25,6 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
                 _, level = headline.headline_and_level_at_point(self.view,\
                                                              region.a,
                                                              search_above_and_down=True)
-                print("level!!!!")
-                print(level)
             else:
                 level = headline.ANY_LEVEL
 

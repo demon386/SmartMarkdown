@@ -74,14 +74,16 @@ def headline_and_level_at_point(view, from_point, search_above_and_down=False):
                                                     from_point,\
                                                     ANY_LEVEL,
                                                     skip_folded=True)
-        line_content, level = headline_and_level_at_point(view, headline_region.a)
+        if headline_region:
+            line_content, level = headline_and_level_at_point(view, headline_region.a)
         # Search down
         if level is None:
             headline_region, _ = find_next_headline(view,\
                                                     from_point,\
                                                     ANY_LEVEL,
                                                     skip_folded=True)
-            line_content, level = headline_and_level_at_point(view, headline_region.a)
+            if headline_region:
+                line_content, level = headline_and_level_at_point(view, headline_region.a)
 
     return line_content, level
 
