@@ -110,6 +110,7 @@ class GlobalFoldingCommand(SmartFoldingCommand):
         if self._is_global_folded():
             # Unfold all
             self.view.unfold(sublime.Region(0, self.view.size()))
+            self.view.show(self.view.sel()[0])
         else:
             # Fold all
             region, level = headline.find_next_headline(self.view,\
@@ -128,6 +129,22 @@ class GlobalFoldingCommand(SmartFoldingCommand):
                                                             skip_headline_at_point=True)
                 if region:
                     point = self._point_of_beginning_of_next_line(region.a)
+
+            # If the current point is inside the folded region, move it move
+            # otherwise it's easy to perform some unintentional editing.
+            folded_regions = self.view.folded_regions()
+            new_sel = []
+            for r in self.view.sel():
+                for folded in folded_regions:
+                    if folded.contains(r):
+                        new_sel.append(folded.b)
+                        break
+                else:
+                    new_sel.append(r)
+            self.view.sel().clear()
+            for r in new_sel:
+                self.view.sel().add(r)
+                self.view.show(r)
 
     def _is_global_folded(self):
         """Check if all headlines are folded"""

@@ -50,6 +50,7 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
         self.view.sel().clear()
         for region in new_sel:
             self.view.sel().add(region)
+            self.view.show(region)
 
     def _get_current_headline_level(self, from_point):
         """Return the current headline level of the point.
