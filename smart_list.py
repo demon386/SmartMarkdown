@@ -42,4 +42,6 @@ class SmartListCommand(sublime_plugin.TextCommand):
                 break
 
             self.view.insert(edit, region.a, '\n')
+
+        for region in self.view.sel():
             self.view.show(region)
