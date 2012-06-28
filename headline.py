@@ -1,4 +1,9 @@
 """Some utility functions for working with headline of Markdown.
+
+Terminologies
+- Headline :: The headline entity of the text of the headline
+- Content :: The content under the current headline. It stops after
+  encountering a headline with the same level of EOF.
 """
 # Author: Muchenxuan Tong <demon386@gmail.com>
 
@@ -50,11 +55,11 @@ def region_of_content_of_headline_at_point(view, from_point):
     return sublime.Region(content_line_start_point, end_pos)
 
 
-def headline_and_level_at_point(view, from_point, search_above=False):
+def headline_and_level_at_point(view, from_point, search_above_and_down=False):
     """Return the current headline and level.
 
     If it's in a headline, then return the level of the headline.
-    Otherwise depends on the argument it might search above
+    Otherwise depends on the argument it might search above and down
     """
 
     line_region = view.line(from_point)
@@ -62,13 +67,21 @@ def headline_and_level_at_point(view, from_point, search_above=False):
     # Update the level in case it's headline.ANY_LEVEL
     level = extract_level_from_headline(line_content)
 
-    # Search above
-    if not level and search_above:
+    # Search above and down
+    if not level and search_above_and_down:
+        # Search above
         headline_region, _ = find_previous_headline(view,\
                                                     from_point,\
                                                     ANY_LEVEL,
                                                     skip_folded=True)
-        line_content, level = headline_and_level_at_point(view, from_point)
+        line_content, level = headline_and_level_at_point(view, headline_region.a)
+        # Search down
+        if level is None:
+            headline_region, _ = find_next_headline(view,\
+                                                    from_point,\
+                                                    ANY_LEVEL,
+                                                    skip_folded=True)
+            line_content, level = headline_and_level_at_point(view, headline_region.a)
 
     return line_content, level
 
