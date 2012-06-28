@@ -1,7 +1,7 @@
 [
 	{ "keys": ["tab"], "command": "smart_folding", "context":
 		[
-			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
+			{ "key": "selector", "operator": "equal", "operand": "meta.block-level.markdown" }
 		]
 	},
 	{ "keys": ["shift+tab"], "command": "global_folding", "context":
@@ -11,7 +11,7 @@
 	},
 	{ "keys": ["enter"], "command": "smart_list", "context":
 		[
-			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
+			{ "key": "selector", "operator": "equal", "operand": "markup.list" }
 		]
 	},
 	{ "keys": ["ctrl+c", "ctrl+n"], "command": "headline_move",
