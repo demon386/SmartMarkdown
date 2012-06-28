@@ -23,8 +23,8 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
         for region in self.view.sel():
             if same_level:
                 _, level = headline.headline_and_level_at_point(self.view,\
-                                                             region.a,
-                                                             search_above_and_down=True)
+                                                                region.a,
+                                                                search_above_and_down=True)
             else:
                 level = headline.ANY_LEVEL
 

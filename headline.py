@@ -19,19 +19,6 @@ MATCH_ANY = 4
 ANY_LEVEL = -1
 
 
-def extract_level_from_headline(headline):
-    """Extract the level of headline, None if not found.
-
-    """
-    re_string = _get_re_string(ANY_LEVEL, None)
-    match = re.match(re_string, headline)
-
-    if match:
-        return len(match.group(1))
-    else:
-        return None
-
-
 def region_of_content_of_headline_at_point(view, from_point):
     """Used to extract region of the folded headline."""
     _, level = headline_and_level_at_point(view, from_point)
@@ -65,7 +52,7 @@ def headline_and_level_at_point(view, from_point, search_above_and_down=False):
     line_region = view.line(from_point)
     line_content = view.substr(line_region)
     # Update the level in case it's headline.ANY_LEVEL
-    level = extract_level_from_headline(line_content)
+    level = _extract_level_from_headline(line_content)
 
     # Search above and down
     if not level and search_above_and_down:
@@ -94,7 +81,7 @@ def is_content_empty_at_point(view, from_point):
     line_num, _ = view.rowcol(from_point)
     next_line_region = view.line(view.text_point(line_num + 1, 0))
     next_line_content = view.substr(next_line_region)
-    next_line_level = extract_level_from_headline(next_line_content)
+    next_line_level = _extract_level_from_headline(next_line_content)
 
     if next_line_level and next_line_level <= level:
         # Return True otherwise a '\t' would be insert
@@ -103,50 +90,17 @@ def is_content_empty_at_point(view, from_point):
         return False
 
 
-def _get_re_string(level, match_type=None):
-    """Get the compiled regular expression pattern according to match type.
-
-    Return regular expression string, rather than compiled string. Since
-    sublime's view.find function needs string.
-
-    Parameters
-    ----------
-    match_type: int
-        MATCH_PARENT, MATCH_CHILD, or MATCH_SILBING
+def _extract_level_from_headline(headline):
+    """Extract the level of headline, None if not found.
 
     """
-    if level == ANY_LEVEL:
-        re_string = r'^(#+)\s.*'
+    re_string = _get_re_string(ANY_LEVEL, None)
+    match = re.match(re_string, headline)
+
+    if match:
+        return len(match.group(1))
     else:
-        try:
-            if match_type == MATCH_PARENT:
-                re_string = r'^(#{1,%d})\s.*' % level
-            elif match_type == MATCH_CHILD:
-                re_string = r'^(#{%d,})\s.*' % level
-            elif match_type == MATCH_SILBING:
-                re_string = r'^(#{%d,%d})\s.*' % (level, level)
-        except ValueError:
-            print("match_type has to be specified if level isn't ANY_LEVE")
-    return re_string
-
-
-def _get_new_point_if_already_in_headline(view, from_point, forward=True):
-    line_content = view.substr(view.line(from_point))
-    if extract_level_from_headline(line_content):
-        line_num, _ = view.rowcol(from_point)
-        if forward:
-            return view.text_point(line_num + 1, 0)
-        else:
-            return view.text_point(line_num, 0) - 1
-    else:
-        return from_point
-
-
-def _is_region_folded(region, view):
-    for i in view.folded_regions():
-        if i.contains(region):
-            return True
-    return False
+        return None
 
 
 def find_next_headline(view, from_point, level, match_type=None,
@@ -200,7 +154,7 @@ def find_next_headline(view, from_point, level, match_type=None,
     if match_region:
         ## Extract the level of matched headlines according to the region
         headline = view.substr(match_region)
-        match_level = extract_level_from_headline(headline)
+        match_level = _extract_level_from_headline(headline)
     else:
         match_level = None
     return (match_region, match_level)
@@ -256,10 +210,56 @@ def find_previous_headline(view, from_point, level, match_type=None,
     if match_region:
         ## Extract the level of matched headlines according to the region
         headline = view.substr(match_region)
-        match_level = extract_level_from_headline(headline)
+        match_level = _extract_level_from_headline(headline)
     else:
         match_level = None
     return (match_region, match_level)
+
+
+def _get_re_string(level, match_type=None):
+    """Get the compiled regular expression pattern according to match type.
+
+    Return regular expression string, rather than compiled string. Since
+    sublime's view.find function needs string.
+
+    Parameters
+    ----------
+    match_type: int
+        MATCH_PARENT, MATCH_CHILD, or MATCH_SILBING
+
+    """
+    if level == ANY_LEVEL:
+        re_string = r'^(#+)\s.*'
+    else:
+        try:
+            if match_type == MATCH_PARENT:
+                re_string = r'^(#{1,%d})\s.*' % level
+            elif match_type == MATCH_CHILD:
+                re_string = r'^(#{%d,})\s.*' % level
+            elif match_type == MATCH_SILBING:
+                re_string = r'^(#{%d,%d})\s.*' % (level, level)
+        except ValueError:
+            print("match_type has to be specified if level isn't ANY_LEVE")
+    return re_string
+
+
+def _get_new_point_if_already_in_headline(view, from_point, forward=True):
+    line_content = view.substr(view.line(from_point))
+    if _extract_level_from_headline(line_content):
+        line_num, _ = view.rowcol(from_point)
+        if forward:
+            return view.text_point(line_num + 1, 0)
+        else:
+            return view.text_point(line_num, 0) - 1
+    else:
+        return from_point
+
+
+def _is_region_folded(region, view):
+    for i in view.folded_regions():
+        if i.contains(region):
+            return True
+    return False
 
 
 def _get_neraest_previous_match_region(from_point, all_match_regions, view, \
