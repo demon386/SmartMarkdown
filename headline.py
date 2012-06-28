@@ -4,6 +4,8 @@
 
 import re
 
+import sublime
+
 
 MATCH_PARENT = 1
 MATCH_CHILD = 2
@@ -23,6 +25,67 @@ def extract_level_from_headline(headline):
         return len(match.group(1))
     else:
         return None
+
+
+def region_of_content_of_headline_at_point(view, from_point):
+    """Used to extract region of the folded headline."""
+    _, level = headline_and_level_at_point(view, from_point)
+    if level == None:
+        return None
+
+    if is_content_empty_at_point(view, from_point):
+        return None
+
+    line_num, _ = view.rowcol(from_point)
+    content_line_start_point = view.text_point(line_num + 1, 0)
+
+    next_headline, _ = find_next_headline(view,
+                                          content_line_start_point,
+                                          level,
+                                          MATCH_PARENT)
+    if next_headline != None:
+        end_pos = next_headline.a - 1
+    else:
+        end_pos = view.size()
+    return sublime.Region(content_line_start_point, end_pos)
+
+
+def headline_and_level_at_point(view, from_point, search_above=False):
+    """Return the current headline and level.
+
+    If it's in a headline, then return the level of the headline.
+    Otherwise depends on the argument it might search above
+    """
+
+    line_region = view.line(from_point)
+    line_content = view.substr(line_region)
+    # Update the level in case it's headline.ANY_LEVEL
+    level = extract_level_from_headline(line_content)
+
+    # Search above
+    if not level and search_above:
+        headline_region, _ = find_previous_headline(view,\
+                                                    from_point,\
+                                                    ANY_LEVEL,
+                                                    skip_folded=True)
+        line_content, level = headline_and_level_at_point(view, from_point)
+
+    return line_content, level
+
+
+def is_content_empty_at_point(view, from_point):
+    """Check if the next line is a headline at the same level"""
+    _, level = headline_and_level_at_point(view, from_point)
+    line_num, _ = view.rowcol(from_point)
+    next_line_region = view.line(view.text_point(line_num + 1, 0))
+    next_line_content = view.substr(next_line_region)
+    next_line_level = extract_level_from_headline(next_line_content)
+
+    if next_line_level and next_line_level <= level:
+        # Return True otherwise a '\t' would be insert
+        return True
+    else:
+        return False
 
 
 def _get_re_string(level, match_type=None):
@@ -63,11 +126,13 @@ def _get_new_point_if_already_in_headline(view, from_point, forward=True):
     else:
         return from_point
 
+
 def _is_region_folded(region, view):
     for i in view.folded_regions():
         if i.contains(region):
             return True
     return False
+
 
 def find_next_headline(view, from_point, level, match_type=None,
                        skip_headline_at_point=False,

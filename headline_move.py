@@ -22,7 +22,9 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
 
         for region in self.view.sel():
             if same_level:
-                level = self._get_current_headline_level(region.a)
+                _, level = headline.headline_and_level_at_point(self.view,\
+                                                             region.a,
+                                                             search_above=True)
             else:
                 level = headline.ANY_LEVEL
 
@@ -47,27 +49,10 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
                     match_region = sublime.Region(0, 0)
             new_sel.append(sublime.Region(match_region.a, match_region.a))
 
+        self._adjust_view(new_sel)
+
+    def _adjust_view(self, new_sel):
         self.view.sel().clear()
         for region in new_sel:
             self.view.sel().add(region)
             self.view.show(region)
-
-    def _get_current_headline_level(self, from_point):
-        """Return the current headline level of the point.
-
-        If it's in a headline, then return the level of the headline.
-        Otherwise search the headline above.
-        """
-        # First treat the current line as headline
-        headline_content = self.view.substr(self.view.line(from_point))
-        level = headline.extract_level_from_headline(headline_content)
-
-        if not level:
-            headline_region, _ = headline.find_previous_headline(self.view,\
-                                                              from_point,\
-                                                              headline.ANY_LEVEL,
-                                                              skip_folded=True)
-            headline_content = self.view.substr(self.view.line(headline_region))
-            level = headline.extract_level_from_headline(headline_content)
-
-        return level

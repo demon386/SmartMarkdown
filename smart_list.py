@@ -22,9 +22,7 @@ class SmartListCommand(sublime_plugin.TextCommand):
 
             match = EMPTY_LIST_PATTERN.match(line_content)
             if match:
-                self.view.sel().add(line_to_point_region)
-                self.view.run_command("add_to_kill_ring", {"forward": True})
-                self.view.run_command('right_delete')
+                self.view.erase(edit, line_to_point_region)
                 break
 
             match = ORDER_LIST_PATTERN.match(line_content)
@@ -42,6 +40,8 @@ class SmartListCommand(sublime_plugin.TextCommand):
                 break
 
             self.view.insert(edit, region.a, '\n')
+        self._adjust_view()
 
+    def _adjust_view(self):
         for region in self.view.sel():
             self.view.show(region)

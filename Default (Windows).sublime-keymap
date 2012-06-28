@@ -4,6 +4,17 @@
 			{ "key": "selector", "operator": "equal", "operand": "meta.block-level.markdown" }
 		]
 	},
+	{ "keys": ["tab"], "command": "smart_folding", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "markup.heading" }
+		]
+	},
+	{ "keys": ["tab"], "command": "smart_folding", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "markup.list" },
+			{ "key": "preceding_text", "operator": "not_regex_contains", "operand": "^\\s*([-*]|\\d+\\.+)\\s+" }
+		]
+	},
 	{ "keys": ["shift+tab"], "command": "global_folding", "context":
 	  	[
 			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
@@ -11,10 +22,14 @@
 	},
 	{ "keys": ["enter"], "command": "smart_list", "context":
 		[
-			{ "key": "preceding_text", "operator": "regex_contains", "operand": "\\s*([-*]|\\d+\\.+)\\s+" }
+			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*([-*]|\\d+\\.+)\\s+" }
 		]
 	},
-
+	{ "keys": ["enter"], "command": "smart_list", "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "markup.list" }
+		]
+	},
 	{ "keys": ["ctrl+c", "ctrl+n"], "command": "headline_move",
 	  "args": {"forward": true, "same_level": false}, "context":
 	  	[

@@ -27,65 +27,45 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         ever_matched = False
         for region in self.view.sel():
-            # Extract the line content
-            line_num, _ = self.view.rowcol(region.a)
-            matched = self.fold_or_unfold_headline_at_line(line_num, headline.ANY_LEVEL)
+            matched = self.fold_or_unfold_headline_at_point(region.a, headline.ANY_LEVEL)
             if matched:
                 ever_matched = True
         if not ever_matched:
-            for i in self.view.sel():
-                self.view.insert(edit, i.a, '\t')
+            for r in self.view.sel():
+                self.view.insert(edit, r.a, '\t')
+                self.view.show(r)
 
-    def fold_or_unfold_headline_at_line(self, line_num, level):
+    def fold_or_unfold_headline_at_point(self, from_point, level):
         """Smart folding of the current headline.
 
         Unfold only when it's totally folded. Otherwise fold it.
 
         """
-        line_region = self.view.line(self.view.text_point(line_num, 0))
-        line_content = self.view.substr(line_region)
-        # Update the level in case it's headline.ANY_LEVEL
-        level = headline.extract_level_from_headline(line_content)
-
+        _, level = headline.headline_and_level_at_point(self.view,
+                                                        from_point)
         # Not a headline, cancel
-        if level == None:
+        if level is None:
             return False
 
-        # We need next line to check this is an empty headline.
-        # If so, Nothing needs to be done.
-        next_line_region = self.view.line(self.view.text_point(line_num + 1, 0))
-        next_line_content = self.view.substr(next_line_region)
-        next_line_level = headline.extract_level_from_headline(next_line_content)
-
-        if next_line_level and next_line_level <= level:
-            # Return True otherwise a '\t' would be insert
+        content_region = headline.region_of_content_of_headline_at_point(self.view,
+                                                                         from_point)
+        # If the content is empty, Nothing needs to be done.
+        if content_region is None:
             return True
 
-        content_line_start_point = self.view.text_point(line_num + 1, 0)
-        content_region = self._region_before_next_parent_headline_or_eof(content_line_start_point,
-                                                                        level)
-
+        # Check if content region is folded to decide the action.
         if self._is_region_totally_folded(content_region):
             self._unfold_yet_fold_subheads(content_region, level)
         else:
             self.view.fold(content_region)
         return True
 
-    def _region_before_next_parent_headline_or_eof(self, content_line_start_point, level):
-        """Used to extract region of the folded headline."""
-        next_headline, _ = headline.find_next_headline(self.view,
-                                                       content_line_start_point,
-                                                       level,
-                                                       headline.MATCH_PARENT)
-        if next_headline != None:
-            end_pos = next_headline.a - 1
-        else:
-            end_pos = self.view.size()
-        return sublime.Region(content_line_start_point, end_pos)
-
     def _is_region_totally_folded(self, region):
+        if (region is None) or (region.a == region.b):
+            return True
+
         for i in self.view.folded_regions():
-            if i == region:
+            if i.contains(region):
                 return True
         return False
 
@@ -97,7 +77,8 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
         end_line, _ = self.view.rowcol(region.b)
 
         for i in range(start_line, end_line + 1):
-            self.fold_or_unfold_headline_at_line(i, level + 1)
+            region = self.view.text_point(i, 0)
+            self.fold_or_unfold_headline_at_point(region, level + 1)
 
 
 class GlobalFoldingCommand(SmartFoldingCommand):
@@ -109,71 +90,77 @@ class GlobalFoldingCommand(SmartFoldingCommand):
     def run(self, edit):
         if self._is_global_folded():
             # Unfold all
-            self.view.unfold(sublime.Region(0, self.view.size()))
-            self.view.show(self.view.sel()[0])
+            self._unfold_all()
         else:
-            # Fold all
-            region, level = headline.find_next_headline(self.view,\
-                                                        0,\
-                                                        headline.ANY_LEVEL)
-            # Headline region must be exists, otherwise it would be treated
-            # as gobal folded.
-            point = self._point_of_beginning_of_next_line(region.a)
-
-            while(point and region):
-                region = self._region_before_next_parent_headline_or_eof(point,\
-                                                                        level)
-                self.view.fold(region)
-                region, level = headline.find_next_headline(self.view, region.b,\
-                                                            headline.ANY_LEVEL,
-                                                            skip_headline_at_point=True)
-                if region:
-                    point = self._point_of_beginning_of_next_line(region.a)
-
-            # If the current point is inside the folded region, move it move
-            # otherwise it's easy to perform some unintentional editing.
-            folded_regions = self.view.folded_regions()
-            new_sel = []
-            for r in self.view.sel():
-                for folded in folded_regions:
-                    if folded.contains(r):
-                        new_sel.append(folded.b)
-                        break
-                else:
-                    new_sel.append(r)
-            self.view.sel().clear()
-            for r in new_sel:
-                self.view.sel().add(r)
-                self.view.show(r)
+            self._fold_all()
 
     def _is_global_folded(self):
         """Check if all headlines are folded"""
         region, level = headline.find_next_headline(self.view,\
-                                                        0,\
-                                                        headline.ANY_LEVEL)
+                                                    0,\
+                                                    headline.ANY_LEVEL)
         # Treating no heeadline as folded, since unfolded all makes no harm
         if not region:
             return True
 
-        point = self._point_of_beginning_of_next_line(region.a)
-        while(point and region):
-            region = self._region_before_next_parent_headline_or_eof(point,\
-                                                                    level)
+        point = region.a
+        # point can be zero
+        while (point is not None and region):
+            region = headline.region_of_content_of_headline_at_point(self.view,\
+                                                                     point)
+            if region:
+                point = region.b
             if not self._is_region_totally_folded(region):
                 return False
             else:
-                region, level = headline.find_next_headline(self.view, region.b,\
+                region, level = headline.find_next_headline(self.view, point,\
                                                             headline.ANY_LEVEL,
                                                             skip_headline_at_point=True)
                 if region:
-                    point = self._point_of_beginning_of_next_line(region.a)
+                    point = region.a
         return True
 
-    def _point_of_beginning_of_next_line(self, from_point):
-        "Return the point of the beginning of next line. None if EOF."
-        line_num, _ = self.view.rowcol(from_point)
-        point = self.view.text_point(line_num + 1, 0)
-        if point >= self.view.size():
-            return None
-        else:
-            return point
+    def _unfold_all(self):
+        self.view.unfold(sublime.Region(0, self.view.size()))
+        self.view.show(self.view.sel()[0])
+
+    def _fold_all(self):
+        region, level = headline.find_next_headline(self.view,\
+                                                    0,\
+                                                    headline.ANY_LEVEL)
+
+        # At this point, headline region is sure to exist, otherwise it would be
+        # treated as gobal folded. (self._is_global_folded() would return True)
+        point = region.a
+        # point can be zero
+        while (point is not None and region):
+            region = headline.region_of_content_of_headline_at_point(self.view,\
+                                                                     point)
+            if region:
+                point = region.b
+                self.view.fold(region)
+            region, level = headline.find_next_headline(self.view, point,\
+                                                        headline.ANY_LEVEL,
+                                                        skip_headline_at_point=True)
+            if region:
+                point = region.a
+        self._adjust_cursors_and_view()
+
+    def _adjust_cursors_and_view(self):
+        # If the current point is inside the folded region, move it move
+        # otherwise it's easy to perform some unintentional editing.
+        folded_regions = self.view.folded_regions()
+        new_sel = []
+
+        for r in self.view.sel():
+            for folded in folded_regions:
+                if folded.contains(r):
+                    new_sel.append(sublime.Region(folded.b, folded.b))
+                    break
+            else:
+                new_sel.append(r)
+
+        self.view.sel().clear()
+        for r in new_sel:
+            self.view.sel().add(r)
+            self.view.show(r)
