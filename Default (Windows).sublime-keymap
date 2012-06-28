@@ -11,9 +11,10 @@
 	},
 	{ "keys": ["enter"], "command": "smart_list", "context":
 		[
-			{ "key": "selector", "operator": "equal", "operand": "markup.list" }
+			{ "key": "preceding_text", "operator": "regex_contains", "operand": "\\s*([-*]|\\d+\\.+)\\s+" }
 		]
 	},
+
 	{ "keys": ["ctrl+c", "ctrl+n"], "command": "headline_move",
 	  "args": {"forward": true, "same_level": false}, "context":
 	  	[
