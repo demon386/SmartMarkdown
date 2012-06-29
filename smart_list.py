@@ -20,6 +20,15 @@ class SmartListCommand(sublime_plugin.TextCommand):
                                                   region.a)
             line_content = self.view.substr(line_to_point_region)
 
+            # Disable smart list when folded.
+            folded = False
+            for i in self.view.folded_regions():
+                if i.contains(line_to_point_region):
+                    self.view.insert(edit, region.a, '\n')
+                    folded = True
+            if folded:
+                break
+
             match = EMPTY_LIST_PATTERN.match(line_content)
             if match:
                 self.view.erase(edit, line_to_point_region)
