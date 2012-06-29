@@ -5,7 +5,8 @@ The feature is borrowed from [Org-mode](http://org-mode.org).
 """
 # Author: Muchenxuan Tong <demon386@gmail.com>
 
-import sublime, sublime_plugin
+import sublime
+import sublime_plugin
 
 import headline
 
