@@ -92,17 +92,20 @@ def is_content_empty_at_point(view, from_point):
     """Check if the content under the current headline is empty.
 
     For implementation, check if next line is a headline a the same
-    or igher level.
+    or higher level.
 
     """
     _, level = headline_and_level_at_point(view, from_point)
+    if level is None:
+        raise ValueError("from_point must be inside a valid headline.")
+
     line_num, _ = view.rowcol(from_point)
     next_line_region = view.line(view.text_point(line_num + 1, 0))
     next_line_content = view.substr(next_line_region)
     next_line_level = _extract_level_from_headline(next_line_content)
 
+    # Note that EOF works too in this case.
     if next_line_level and next_line_level <= level:
-        # Return True otherwise a '\t' would be insert
         return True
     else:
         return False
