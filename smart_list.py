@@ -49,8 +49,8 @@ class SmartListCommand(sublime_plugin.TextCommand):
                 break
 
             self.view.insert(edit, region.a, '\n')
-        self._adjust_view()
+        self.adjust_view()
 
-    def _adjust_view(self):
+    def adjust_view(self):
         for region in self.view.sel():
             self.view.show(region)

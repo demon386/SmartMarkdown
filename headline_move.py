@@ -49,9 +49,9 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
                     match_region = sublime.Region(0, 0)
             new_sel.append(sublime.Region(match_region.a, match_region.a))
 
-        self._adjust_view(new_sel)
+        self.adjust_view(new_sel)
 
-    def _adjust_view(self, new_sel):
+    def adjust_view(self, new_sel):
         self.view.sel().clear()
         for region in new_sel:
             self.view.sel().add(region)

@@ -54,13 +54,13 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
             return True
 
         # Check if content region is folded to decide the action.
-        if self._is_region_totally_folded(content_region):
-            self._unfold_yet_fold_subheads(content_region, level)
+        if self.is_region_totally_folded(content_region):
+            self.unfold_yet_fold_subheads(content_region, level)
         else:
             self.view.fold(content_region)
         return True
 
-    def _is_region_totally_folded(self, region):
+    def is_region_totally_folded(self, region):
         if (region is None) or (region.a == region.b):
             return True
 
@@ -69,7 +69,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
                 return True
         return False
 
-    def _unfold_yet_fold_subheads(self, region, level):
+    def unfold_yet_fold_subheads(self, region, level):
         "Keep the subheadlines folded."
         self.view.unfold(region)
         ## fold subheads
@@ -88,13 +88,13 @@ class GlobalFoldingCommand(SmartFoldingCommand):
     Otherwise fold.
     """
     def run(self, edit):
-        if self._is_global_folded():
+        if self.is_global_folded():
             # Unfold all
-            self._unfold_all()
+            self.unfold_all()
         else:
-            self._fold_all()
+            self.fold_all()
 
-    def _is_global_folded(self):
+    def is_global_folded(self):
         """Check if all headlines are folded"""
         region, level = headline.find_next_headline(self.view,\
                                                     0,\
@@ -110,7 +110,7 @@ class GlobalFoldingCommand(SmartFoldingCommand):
                                                                      point)
             if region:
                 point = region.b
-            if not self._is_region_totally_folded(region):
+            if not self.is_region_totally_folded(region):
                 return False
             else:
                 region, level = headline.find_next_headline(self.view, point,\
@@ -120,17 +120,17 @@ class GlobalFoldingCommand(SmartFoldingCommand):
                     point = region.a
         return True
 
-    def _unfold_all(self):
+    def unfold_all(self):
         self.view.unfold(sublime.Region(0, self.view.size()))
         self.view.show(self.view.sel()[0])
 
-    def _fold_all(self):
+    def fold_all(self):
         region, level = headline.find_next_headline(self.view,\
                                                     0,\
                                                     headline.ANY_LEVEL)
 
         # At this point, headline region is sure to exist, otherwise it would be
-        # treated as gobal folded. (self._is_global_folded() would return True)
+        # treated as gobal folded. (self.is_global_folded() would return True)
         point = region.a
         # point can be zero
         while (point is not None and region):
@@ -144,9 +144,9 @@ class GlobalFoldingCommand(SmartFoldingCommand):
                                                         skip_headline_at_point=True)
             if region:
                 point = region.a
-        self._adjust_cursors_and_view()
+        self.adjust_cursors_and_view()
 
-    def _adjust_cursors_and_view(self):
+    def adjust_cursors_and_view(self):
         # If the current point is inside the folded region, move it move
         # otherwise it's easy to perform some unintentional editing.
         folded_regions = self.view.folded_regions()
