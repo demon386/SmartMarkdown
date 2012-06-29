@@ -3,7 +3,7 @@
 Terminologies
 - Headline :: The headline entity OR the text of the headline
 - Content :: The content under the current headline. It stops after
-  encountering a headline with the same level of EOF.
+  encountering a headline with the same or higher level OR EOF.
 """
 # Author: Muchenxuan Tong <demon386@gmail.com>
 
