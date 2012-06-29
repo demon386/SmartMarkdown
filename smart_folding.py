@@ -4,6 +4,7 @@ It enables folding / unfolding the headlines by simply pressing TAB on headlines
 
 Global headline folding / unfolding is recommended to be trigged by Shift + TAB,
 at anywhere.
+
 """
 # Author: Muchenxuan Tong <demon386@gmail.com>
 
@@ -23,6 +24,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
 
     It's designed to bind to TAB key, and if the current line is not
     a headline, a \t would be inserted.
+
     """
     def run(self, edit):
         ever_matched = False
@@ -51,6 +53,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
                                                                          from_point)
         # If the content is empty, Nothing needs to be done.
         if content_region is None:
+            # Return True because there is a headline anyway.
             return True
 
         # Check if content region is folded to decide the action.
@@ -61,6 +64,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
         return True
 
     def is_region_totally_folded(self, region):
+        """Decide if the region is folded. Treat empty region as folded."""
         if (region is None) or (region.a == region.b):
             return True
 
@@ -70,9 +74,10 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
         return False
 
     def unfold_yet_fold_subheads(self, region, level):
-        "Keep the subheadlines folded."
+        """Unfold the region while keeping the subheadlines folded."""
+        ## First unfold all
         self.view.unfold(region)
-        ## fold subheads
+        ## Fold subheads
         start_line, _ = self.view.rowcol(region.a)
         end_line, _ = self.view.rowcol(region.b)
 
@@ -86,6 +91,7 @@ class GlobalFoldingCommand(SmartFoldingCommand):
 
     Unfold only when top-level headlines are totally folded.
     Otherwise fold.
+
     """
     def run(self, edit):
         if self.is_global_folded():
@@ -95,11 +101,13 @@ class GlobalFoldingCommand(SmartFoldingCommand):
             self.fold_all()
 
     def is_global_folded(self):
-        """Check if all headlines are folded"""
+        """Check if all headlines are folded.
+        """
         region, level = headline.find_next_headline(self.view,\
                                                     0,\
                                                     headline.ANY_LEVEL)
-        # Treating no heeadline as folded, since unfolded all makes no harm
+        # Treating no heeadline as folded, since unfolded all makes
+        # no harm in this situation.
         if not region:
             return True
 
@@ -147,8 +155,12 @@ class GlobalFoldingCommand(SmartFoldingCommand):
         self.adjust_cursors_and_view()
 
     def adjust_cursors_and_view(self):
-        # If the current point is inside the folded region, move it move
-        # otherwise it's easy to perform some unintentional editing.
+        """After folder, adjust cursors and view.
+
+        If the current point is inside the folded region, move it move
+        otherwise it's easy to perform some unintentional editing.
+
+        """
         folded_regions = self.view.folded_regions()
         new_sel = []
 

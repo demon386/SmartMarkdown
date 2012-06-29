@@ -1,4 +1,7 @@
 """This module provides commands for easily moving between headilnes.
+
+The feature is borrowed from [Org-mode](http://org-mode.org).
+
 """
 # Author: Muchenxuan Tong <demon386@gmail.com>
 
@@ -13,6 +16,7 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
 
         If same_level is true, only move to headline with the same level
         or higher level.
+
         """
         new_sel = []
         if same_level:
