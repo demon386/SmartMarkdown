@@ -1,7 +1,7 @@
 """Some utility functions for working with headline of Markdown.
 
 Terminologies
-- Headline :: The headline entity of the text of the headline
+- Headline :: The headline entity OR the text of the headline
 - Content :: The content under the current headline. It stops after
   encountering a headline with the same level of EOF.
 """
@@ -197,16 +197,17 @@ def find_previous_headline(view, from_point, level, match_type=None,
     if skip_headline_at_point:
         # Move the point to the previous lineif we are
         # current in a headline already.
-        from_point = _get_new_point_if_already_in_headline(view, from_point,\
+        from_point = _get_new_point_if_already_in_headline(view, from_point, \
                                                            forward=False)
 
     re_string = _get_re_string(level, match_type)
     all_match_regions = view.find_all(re_string)
 
-    match_region = _get_neraest_previous_match_region(from_point,\
-                                                      all_match_regions,\
-                                                      view,\
-                                                      skip_folded)
+    match_region = _nearest_region_among_matches_from_point(view, \
+                                                            all_match_regions, \
+                                                            from_point, \
+                                                            False, \
+                                                            skip_folded)
     if match_region:
         ## Extract the level of matched headlines according to the region
         headline = view.substr(match_region)
@@ -217,7 +218,7 @@ def find_previous_headline(view, from_point, level, match_type=None,
 
 
 def _get_re_string(level, match_type=None):
-    """Get the compiled regular expression pattern according to match type.
+    """Get regular expression string according to match type.
 
     Return regular expression string, rather than compiled string. Since
     sublime's view.find function needs string.
@@ -262,9 +263,10 @@ def _is_region_folded(region, view):
     return False
 
 
-def _get_neraest_previous_match_region(from_point, all_match_regions, view, \
-                                       skip_folded):
-    """Find the nearest previous  matched region among all matched regions.
+def _nearest_region_among_matches_from_point(view, all_match_regions, \
+                                             from_point, forward=False,
+                                             skip_folded=True):
+    """Find the nearest matched region among all matched regions.
 
     None if not found.
 
@@ -272,8 +274,16 @@ def _get_neraest_previous_match_region(from_point, all_match_regions, view, \
     nearest_region = None
 
     for r in all_match_regions:
-        if r.b <= from_point and (not nearest_region or r.a > nearest_region.a):
-            if skip_folded and not _is_region_folded(r, view):
-                nearest_region = r
+        if not forward and r.b <= from_point and \
+            (not nearest_region or r.a > nearest_region.a):
+            candidate = r
+        elif forward and r.a >= from_point and \
+            (not nearest_region or r.b < nearest_region.b):
+            candidate = r
+        else:
+            continue
+        if skip_folded and not _is_region_folded(candidate, view):
+            nearest_region = candidate
 
     return nearest_region
+
