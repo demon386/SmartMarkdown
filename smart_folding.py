@@ -46,7 +46,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
         _, level = headline.headline_and_level_at_point(self.view,
                                                         from_point)
         # Not a headline, cancel
-        if level is None:
+        if level is None or not headline.is_scope_headline(self.view, from_point):
             return False
 
         content_region = headline.region_of_content_of_headline_at_point(self.view,
@@ -103,9 +103,8 @@ class GlobalFoldingCommand(SmartFoldingCommand):
     def is_global_folded(self):
         """Check if all headlines are folded.
         """
-        region, level = headline.find_next_headline(self.view,\
-                                                    0,\
-                                                    headline.ANY_LEVEL)
+        region, level = headline.find_headline(self.view, 0, \
+                                               headline.ANY_LEVEL, True)
         # Treating no heeadline as folded, since unfolded all makes
         # no harm in this situation.
         if not region:
@@ -114,16 +113,17 @@ class GlobalFoldingCommand(SmartFoldingCommand):
         point = region.a
         # point can be zero
         while (point is not None and region):
-            region = headline.region_of_content_of_headline_at_point(self.view,\
+            region = headline.region_of_content_of_headline_at_point(self.view, \
                                                                      point)
             if region:
                 point = region.b
             if not self.is_region_totally_folded(region):
                 return False
             else:
-                region, level = headline.find_next_headline(self.view, point,\
-                                                            headline.ANY_LEVEL,
-                                                            skip_headline_at_point=True)
+                region, level = headline.find_headline(self.view, point, \
+                                                       headline.ANY_LEVEL, \
+                                                       True,
+                                                       skip_headline_at_point=True)
                 if region:
                     point = region.a
         return True
@@ -133,23 +133,25 @@ class GlobalFoldingCommand(SmartFoldingCommand):
         self.view.show(self.view.sel()[0])
 
     def fold_all(self):
-        region, level = headline.find_next_headline(self.view,\
-                                                    0,\
-                                                    headline.ANY_LEVEL)
+        region, level = headline.find_headline(self.view, \
+                                               0, \
+                                               headline.ANY_LEVEL, \
+                                               True)
 
         # At this point, headline region is sure to exist, otherwise it would be
         # treated as gobal folded. (self.is_global_folded() would return True)
         point = region.a
         # point can be zero
         while (point is not None and region):
-            region = headline.region_of_content_of_headline_at_point(self.view,\
+            region = headline.region_of_content_of_headline_at_point(self.view, \
                                                                      point)
             if region:
                 point = region.b
                 self.view.fold(region)
-            region, level = headline.find_next_headline(self.view, point,\
-                                                        headline.ANY_LEVEL,
-                                                        skip_headline_at_point=True)
+            region, level = headline.find_headline(self.view, point, \
+                                                   headline.ANY_LEVEL,
+                                                   True, \
+                                                   skip_headline_at_point=True)
             if region:
                 point = region.a
         self.adjust_cursors_and_view()

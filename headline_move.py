@@ -34,22 +34,24 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
                 level = headline.ANY_LEVEL
 
             if forward:
-                match_region, _ = headline.find_next_headline(self.view,\
-                                                           region.a,\
-                                                           level,\
-                                                           level_type,\
-                                                           skip_headline_at_point=True,\
-                                                           skip_folded=True)
+                match_region, _ = headline.find_headline(self.view, \
+                                                         region.a, \
+                                                         level, \
+                                                         True, \
+                                                         level_type, \
+                                                         skip_headline_at_point=True,\
+                                                         skip_folded=True)
                 if not match_region:
                     size = self.view.size()
                     match_region = sublime.Region(size, size)
             else:
-                match_region, _ = headline.find_previous_headline(self.view,\
-                                                                  region.a,\
-                                                                  level,\
-                                                                  level_type,\
-                                                                  skip_headline_at_point=True,\
-                                                                  skip_folded=True)
+                match_region, _ = headline.find_headline(self.view,\
+                                                         region.a,\
+                                                         level,\
+                                                         False,
+                                                         level_type,\
+                                                         skip_headline_at_point=True,\
+                                                         skip_folded=True)
                 if not match_region:
                     match_region = sublime.Region(0, 0)
             new_sel.append(sublime.Region(match_region.a, match_region.a))

@@ -1,18 +1,7 @@
 [
 	{ "keys": ["tab"], "command": "smart_folding", "context":
 		[
-			{ "key": "selector", "operator": "equal", "operand": "meta.block-level.markdown" }
-		]
-	},
-	{ "keys": ["tab"], "command": "smart_folding", "context":
-		[
-			{ "key": "selector", "operator": "equal", "operand": "markup.heading" }
-		]
-	},
-	{ "keys": ["tab"], "command": "smart_folding", "context":
-		[
-			{ "key": "selector", "operator": "equal", "operand": "markup.list" },
-			{ "key": "preceding_text", "operator": "not_regex_contains", "operand": "^\\s*([-*]|\\d+\\.+)\\s+" }
+			{ "key": "selector", "operator": "equal", "operand": "markup.heading.markdown" }
 		]
 	},
 	{ "keys": ["shift+tab"], "command": "global_folding", "context":
@@ -28,6 +17,7 @@
 	},
 	{ "keys": ["enter"], "command": "smart_list", "context":
 		[
+		    { "key": "selector", "operator": "equal", "operand": "text.html.markdown" },
 			{ "key": "selector", "operator": "equal", "operand": "markup.list" }
 		]
 	},

@@ -31,10 +31,11 @@ def region_of_content_of_headline_at_point(view, from_point):
     line_num, _ = view.rowcol(from_point)
     content_line_start_point = view.text_point(line_num + 1, 0)
 
-    next_headline, _ = find_next_headline(view,
-                                          content_line_start_point,
-                                          level,
-                                          MATCH_PARENT)
+    next_headline, _ = find_headline(view, \
+                                     content_line_start_point, \
+                                     level, \
+                                     True, \
+                                     MATCH_PARENT)
     if next_headline != None:
         end_pos = next_headline.a - 1
     else:
@@ -56,19 +57,21 @@ def headline_and_level_at_point(view, from_point, search_above_and_down=False):
     # Search above and down
     if level is None and search_above_and_down:
         # Search above
-        headline_region, _ = find_previous_headline(view,\
-                                                    from_point,\
-                                                    ANY_LEVEL,
-                                                    skip_folded=True)
+        headline_region, _ = find_headline(view,\
+                                           from_point,\
+                                           ANY_LEVEL,
+                                           False,
+                                           skip_folded=True)
         if headline_region:
             line_content, level = headline_and_level_at_point(view,\
                                                               headline_region.a)
         # Search down
         if level is None:
-            headline_region, _ = find_next_headline(view,\
-                                                    from_point,\
-                                                    ANY_LEVEL,
-                                                    skip_folded=True)
+            headline_region, _ = find_headline(view,\
+                                               from_point,\
+                                               ANY_LEVEL,
+                                               True,
+                                               skip_folded=True)
             if headline_region:
                 line_content, level = headline_and_level_at_point(view, headline_region.a)
 
@@ -111,9 +114,9 @@ def is_content_empty_at_point(view, from_point):
         return False
 
 
-def find_next_headline(view, from_point, level, match_type=MATCH_ANY,
-                       skip_headline_at_point=False,
-                       skip_folded=False):
+def find_headline(view, from_point, level, forward=True, \
+                  match_type=MATCH_ANY, skip_headline_at_point=False, \
+                  skip_folded=False):
     """Return the region of the next headline or EOF.
 
     Parameters
@@ -125,6 +128,9 @@ def find_next_headline(view, from_point, level, match_type=MATCH_ANY,
 
     level: int
         The headline level to match.
+
+    forward: boolean
+        Search forward or backward
 
     match_type: int
         MATCH_SILBING, MATCH_PARENT, MATCH_CHILD or MATCH_ANY.
@@ -148,80 +154,35 @@ def find_next_headline(view, from_point, level, match_type=MATCH_ANY,
         # Move the point to the next line if we are
         # current in a headline already.
         from_point = _get_new_point_if_already_in_headline(view, from_point,
-                                                           forward=True)
+                                                           forward)
 
-    ## Use view.find to find the region
     re_string = _get_re_string(level, match_type)
-    match_region = view.find(re_string, from_point)
+    if forward:
+        match_region = view.find(re_string, from_point)
+    else:
+        all_match_regions = view.find_all(re_string)
+        match_region = _nearest_region_among_matches_from_point(view, \
+                                                                all_match_regions, \
+                                                                from_point, \
+                                                                False, \
+                                                                skip_folded)
+
     if skip_folded:
         while (match_region and _is_region_folded(match_region, view)):
             from_point = match_region.b
             match_region = view.find(re_string, from_point)
 
     if match_region:
-        ## Extract the level of matched headlines according to the region
-        headline = view.substr(match_region)
-        match_level = _extract_level_from_headline(headline)
+        if not is_scope_headline(view, match_region.a):
+            return find_headline(view, match_region.a, level, forward, \
+                                 match_type, True, skip_folded)
+        else:
+            ## Extract the level of matched headlines according to the region
+            headline = view.substr(match_region)
+            match_level = _extract_level_from_headline(headline)
     else:
         match_level = None
     return (match_region, match_level)
-
-
-def find_previous_headline(view, from_point, level, match_type=MATCH_ANY,
-                           skip_headline_at_point=False,
-                           skip_folded=False):
-    """Return the region of the previous headline or EOF.
-
-    Parameters
-    ----------
-    view: sublime.view
-
-    from_point: int
-        From which to find.
-
-    level: int
-        The headline level to match.
-
-    match_type: int
-        MATCH_SILBING, MATCH_PARENT, MATCH_CHILD or ANY_LEVEL.
-
-    skip_headline_at_point: boolean
-        When searching whether skip the headline at point
-
-    skip_folded: boolean
-        Whether to skip the folded region
-
-    Returns
-    -------
-    match_region: int
-        Matched region, or None if not found.
-
-    match_level: int
-        The level of matched headline, or None if not found.
-
-    """
-    if skip_headline_at_point:
-        # Move the point to the previous lineif we are
-        # current in a headline already.
-        from_point = _get_new_point_if_already_in_headline(view, from_point, \
-                                                           forward=False)
-
-    re_string = _get_re_string(level, match_type)
-    all_match_regions = view.find_all(re_string)
-
-    match_region = _nearest_region_among_matches_from_point(view, \
-                                                            all_match_regions, \
-                                                            from_point, \
-                                                            False, \
-                                                            skip_folded)
-    if match_region:
-        ## Extract the level of matched headlines according to the region
-        headline = view.substr(match_region)
-        match_level = _extract_level_from_headline(headline)
-    else:
-        match_level = None
-    return (match_region, match_level)
-
 
 def _get_re_string(level, match_type=MATCH_ANY):
     """Get regular expression string according to match type.
@@ -260,6 +221,11 @@ def _get_new_point_if_already_in_headline(view, from_point, forward=True):
             return view.text_point(line_num, 0) - 1
     else:
         return from_point
+
+
+def is_scope_headline(view, from_point):
+    return view.score_selector(from_point, "markup.heading") > 0 or \
+        view.score_selector(from_point, "meta.block-level.markdown") > 0
 
 
 def _nearest_region_among_matches_from_point(view, all_match_regions, \
