@@ -1,0 +1,39 @@
+[
+    {
+        "id": "tools",
+        "children":
+        [
+            {
+                "caption": "Pandoc",
+                "children":
+                [
+                    {
+                        "caption": "Render Markdown to temporary PDF and View",
+                        "command": "pandoc_render",
+                        "args":{"openAfter":true,   "target":"pdf",    "saveResult":false}
+                    },
+                    {
+                        "caption": "Render Markdown to temporary HTML and View",
+                        "command": "pandoc_render",
+                        "args":{"openAfter":true,   "target":"html",    "saveResult":false}
+                    },
+                    {
+                        "caption": "Render Markdown to PDF",
+                        "command": "pandoc_render",
+                        "args":{"openAfter":false,   "target":"pdf",    "saveResult":true}
+                    },
+                    {
+                        "caption": "Render Markdown to HTML",
+                        "command": "pandoc_render",
+                        "args":{"openAfter":false,   "target":"html",    "saveResult":true}
+                    },
+                    {
+                        "caption": "Render Markdown DocX",
+                        "command": "pandoc_render",
+                        "args":{"openAfter":false,   "target":"docx",    "saveResult":true}
+                    }
+                ]
+            }
+        ]
+    }
+]
