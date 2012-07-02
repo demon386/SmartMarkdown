@@ -31,6 +31,10 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 - Smart Headline folding / unfolding is supported.
 - Smart Lists is supported.
 
+## For Developers
+- Whenever possible, please obey the [PEP 8](http://www.python.org/dev/peps/pep-0008/) style guide. This can be checked easily with the plugin SublimeLinter.
+- git-flow is recommended (but not enforced) as a development work flow. For instruction please read [Why aren't you using git-flow?](http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/). To adapt it, a command line tool [gitflow](https://github.com/nvie/gitflow/) is highly recommended.
+
 # License
 The plugin is licensed under the MIT license.
 
