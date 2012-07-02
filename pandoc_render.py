@@ -43,12 +43,10 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
         args = self.pandoc_args(target)
         self.run_pandoc(tmp_md.name,output_name,args)
         if openAfter: self.open_result(output_name,target)
-        print "wrote", output_name
 
     def run_pandoc(self, infile, outfile,args):
         cmd  = ['pandoc'] + args
         cmd += [infile, "-o", outfile]
-        print cmd
         try:
             subprocess.call(cmd)
         except Exception as e:
@@ -70,11 +68,11 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
 
     def open_result(self,outfile,target):
         if target == "html":
-            webbrowser.open_new_tab(output_filename)
+            webbrowser.open_new_tab(outfile)
         elif sys.platform == "win32":
-            os.startfile(output_filename)
+            os.startfile(outfile)
         elif sys.platform == "mac":
-            subprocess.call(["open", output_filename])
-        elif sys.platform == "posix":
-            subprocess.call(["xdg-open", output_filename])
+            subprocess.call(["open", outfile])
+        elif "posix" in sys.platform or "linux" in sys.platform:
+            subprocess.call(["xdg-open", outfile])
 

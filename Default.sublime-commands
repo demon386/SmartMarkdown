@@ -2,7 +2,7 @@
     {
         "caption": "Pandoc: Render Markdown to temp PDF and View",
         "command": "pandoc_render",
-        "args":{"openAfter":false,   "target":"pdf",    "saveResult":false}
+        "args":{"openAfter":true,   "target":"pdf",    "saveResult":false}
     },
     {
         "caption": "Pandoc: Render Markdown to temp HTML and View",
