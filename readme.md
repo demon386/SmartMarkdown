@@ -12,12 +12,12 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 - **Move between headlines**.
 	- Use **Ctrl+c Ctrl+n** to move to the next headline (any level); **Ctrl+c Ctrl+p** to the previous one.
 	- Use **Ctrl+c Ctrl+f** to move to the next headline (same level or higher level); **Ctrl+c Ctrl+b** to the previous one.
-
+- **Basic Pandoc integration** [Pandoc](http://johnmacfarlane.net/pandoc/).
 
 ## Todo
 - **Smart Table**
 - **Embeded R & Python Code for reproducible research**
-- **Combine with Pandoc** [Pandoc](http://johnmacfarlane.net/pandoc/) is an amazing markdown converter.
+- **Better Pandoc integration** Actual support for different Pandoc command line options etc.
 - ...
 
 ## What's new
