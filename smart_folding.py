@@ -29,7 +29,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         ever_matched = False
         for region in self.view.sel():
-            matched = self.fold_or_unfold_headline_at_point(region.a, headline.ANY_LEVEL)
+            matched = self.fold_or_unfold_headline_at_point(region.a)
             if matched:
                 ever_matched = True
         if not ever_matched:
@@ -37,7 +37,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
                 self.view.insert(edit, r.a, '\t')
                 self.view.show(r)
 
-    def fold_or_unfold_headline_at_point(self, from_point, level):
+    def fold_or_unfold_headline_at_point(self, from_point):
         """Smart folding of the current headline.
 
         Unfold only when it's totally folded. Otherwise fold it.
@@ -78,12 +78,22 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
         ## First unfold all
         self.view.unfold(region)
         ## Fold subheads
-        start_line, _ = self.view.rowcol(region.a)
-        end_line, _ = self.view.rowcol(region.b)
+        child_headline_region, _ = headline.find_headline(self.view, region.a, level, True, \
+                                                          headline.MATCH_CHILD)
 
-        for i in range(start_line, end_line + 1):
-            region = self.view.text_point(i, 0)
-            self.fold_or_unfold_headline_at_point(region, level + 1)
+        while (child_headline_region is not None and child_headline_region.b <= region.b):
+            child_content_region = headline.region_of_content_of_headline_at_point(self.view,
+                                                                                   child_headline_region.a)
+            if child_content_region is not None:
+                self.view.fold(child_content_region)
+                search_start_point = child_content_region.b
+            else:
+                search_start_point = child_headline_region.b
+
+            child_headline_region, _ = headline.find_headline(self.view, \
+                                                              search_start_point, level, True, \
+                                                              headline.MATCH_CHILD,
+                                                              skip_headline_at_point=True)
 
 
 class GlobalFoldingCommand(SmartFoldingCommand):
