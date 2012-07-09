@@ -12,15 +12,19 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 - **Move between headlines**.
 	- Use **Ctrl+c Ctrl+n** to move to the next headline (any level); **Ctrl+c Ctrl+p** to the previous one.
 	- Use **Ctrl+c Ctrl+f** to move to the next headline (same level or higher level); **Ctrl+c Ctrl+b** to the previous one.
+- **Smart table**
+	- Current the smart table suppose only Grid table format of [Pandoc](http://johnmacfarlane.net/pandoc/README.html).
+	- The behavior is like the table in Org-mode. If you are unfamiliar with Org-mode, just use | to separate the column, and use the **TAB** to reformat the table at point. Everything would fall into the place. Add +- and then press TAB for adding separator between rows. Add += and thenn press TAB for adding separator between header and the table body. Read the Grid tables section of [Pandoc User grid](http://johnmacfarlane.net/pandoc/README.html#tables) for more information.
+	- Personally I plan to use grid table as a basis and add command for converting to other table formats if necessary.
 - **Basic Pandoc integration with Pandoc** By integrating [SublimePandoc](https://github.com/jclement/SublimePandoc). Added by [DanielMe](https://github.com/DanielMe/).
 
 ## Todo
-- **Smart Table**
 - **Embeded R & Python Code for reproducible research**
 - **Better Pandoc integration** Actual support for different Pandoc command line options etc.
 - ...
 
 ## What's new
+### v0.1.5: Basic smart table (grid table) support added. Basic Pandoc intergration (added by [DanielMe](https://github.com/DanielMe/).)
 ### v0.1.3: Add support for global headling folding / unfolding.
 ### v0.1.2: Move between headlines supported!
 - Use **Ctrl+c Ctrl+n** to move to the next headline (any level); **Ctrl+c Ctrl+p** to the previous one.
