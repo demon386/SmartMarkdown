@@ -33,15 +33,22 @@
 		[
 			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" },
 			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*" },
-			{ "key": "following_text", "operator": "regex_contains", "operand": "\\s*(\\||\\+)"}
+			{ "key": "following_text", "operator": "regex_contains", "operand": "\\s*(\\||\\+[-=])"}
 		]
 	},
-
 	{ "keys": ["shift+tab"], "command": "smart_table",
 	  "args": {"forward": false}, "context":
 		[
 			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" },
-			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*(\\||\\+)" }
+			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*(\\||\\+[-=])" }
+		]
+	},
+	{ "keys": ["shift+tab"], "command": "smart_table",
+	  "args": {"forward": false}, "context":
+		[
+			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" },
+			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*" },
+			{ "key": "following_text", "operator": "regex_contains", "operand": "\\s*(\\||\\+[-=])"}
 		]
 	},
 	{ "keys": ["ctrl+c", "ctrl+n"], "command": "headline_move",
