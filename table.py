@@ -4,6 +4,9 @@ import copy
 import sublime
 
 import utilities
+# Author: Muchenxuan Tong <demon386@gmail.com>
+# LICENSE: MIT
+
 
 TABLE_PATTERN = re.compile(r"\s*\|")
 SEPARATOR_PATTERN = re.compile(r"\s*(\+[=-])")

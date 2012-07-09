@@ -4,6 +4,8 @@ Markdown itself doesn't support grid table, yet pandoc does.
 
 @todo: add a key binding for converting grid table to the simple one
 """
+# Author: Muchenxuan Tong <demon386@gmail.com>
+# LICENSE: MIT
 
 import sublime
 import sublime_plugin
