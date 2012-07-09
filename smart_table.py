@@ -57,6 +57,8 @@ class SmartTable(sublime_plugin.TextCommand):
 
         if line_num < start_line_num or line_num > end_line_num:
             col_pos = 0
+            if line_num > end_line_num:
+                self.view.insert(edit, self.view.text_point(line_num, 0), "\n")
         else:
             col_pos = self.calculate_col_point(t, cur_col_num)
 
