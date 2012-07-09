@@ -1,4 +1,5 @@
 import re
+import copy
 
 import sublime
 
@@ -23,8 +24,6 @@ def convert_table_at_point_as_list(view, from_point):
     table_above = convert_table_above_or_below_as_list(view, from_point, above=True)
     table_below = convert_table_above_or_below_as_list(view, from_point, above=False)
     row_at_point = convert_row_at_point_as_list(view, from_point)
-    print("Table below")
-    print(table_below)
 
     table = table_above + [row_at_point] + table_below
     return table
@@ -45,18 +44,11 @@ def convert_table_above_or_below_as_list(view, from_point, above):
     line_text = utilities.text_at_line(view, line_num)
     table = []
 
-    count = 0
     while line_text and (TABLE_PATTERN.match(line_text) or
                          SEPARATOR_PATTERN.match(line_text)):
-        count += 1
-        if count > 5000:
-            print("count!!")
-            print(count)
-            break
         table.append(_convert_row_text_as_list(line_text))
         line_num += -1 if above else 1
         line_text = utilities.text_at_line(view, line_num)
-        print(line_text)
 
     if above:
         table = table[::-1]
@@ -95,7 +87,6 @@ def _convert_row_text_as_list(row_text):
     match = SEPARATOR_PATTERN.match(row_text)
     if match:
         lst = [match.group(1)]
-        print("MATCH!!!")
 
     return [i.strip() for i in lst]
 
@@ -103,8 +94,6 @@ def _convert_row_text_as_list(row_text):
 def reformat_table_list(table):
     cols_num = max([len(row) for row in table])
     cols_length = _get_cols_length(table, cols_num)
-    print(cols_num)
-    print(cols_length)
 
     new_table = []
     for row in table:
@@ -120,7 +109,7 @@ def reformat_table_list(table):
             marker = row[0][1]
             for i in range(cols_num):
                 new_row.append(marker * (cols_length[i] + 2))
-            # Add as a mark
+            # Add a mark for recognization
             new_row[0] = "+" + new_row[0]
         new_table.append(new_row)
     return new_table
@@ -128,6 +117,7 @@ def reformat_table_list(table):
 
 def convert_table_list_to_str(table):
     table_str = ""
+    table = copy.deepcopy(table)
     for row in table:
         if SEPARATOR_PATTERN.match(row[0]):
             row[0] = row[0][1:]
@@ -169,8 +159,6 @@ def get_point_row_and_col(view, from_point):
     precedding_text = view.substr(region)
 
     split_row = precedding_text.split("|")
-    print("split_row")
-    print(split_row)
     if len(split_row) >= 2:
         col_num = len(split_row) - 2
     elif split_row[0].strip() == "":
@@ -182,7 +170,7 @@ def get_point_row_and_col(view, from_point):
 
 def is_line_separator(view, line_num):
     text = utilities.text_at_line(view, line_num)
-    print("is_line_seperator")
-    print(text)
-    if SEPERATOR_PATTERN.match(text):
+    if text and SEPARATOR_PATTERN.match(text):
         return True
+    else:
+        return False

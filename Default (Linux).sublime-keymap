@@ -25,7 +25,7 @@
 	  "args": {"forward": true}, "context":
 		[
 			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" },
-			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*(\\||\\+)" }
+			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*(\\||\\+[-=])" }
 		]
 	},
 	{ "keys": ["tab"], "command": "smart_table",
