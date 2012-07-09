@@ -66,6 +66,7 @@ class SmartTable(sublime_plugin.TextCommand):
 
         self.view.sel().clear()
         self.view.sel().add(new_sel[0])
+        self.view.show(new_sel[0])
 
     def calculate_col_point(self, formatted_table, col_num):
         i = 0
