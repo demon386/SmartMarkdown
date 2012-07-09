@@ -4,7 +4,7 @@
 
 def text_at_line(view, line_num):
     """Return the content at line. None if out of boundary."""
-    if line_num < 1:
+    if line_num < 0:
         return None
 
     max_line_num, _ = view.rowcol(view.size())
