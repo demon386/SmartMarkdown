@@ -15,6 +15,7 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 - **Smart table**
 	- Current the smart table suppose only Grid table format of [Pandoc](http://johnmacfarlane.net/pandoc/README.html).
 	- The behavior is like the table in Org-mode. If you are unfamiliar with Org-mode, just use | (vertical line) to separate the column, and use the **TAB** to reformat the table at point. Everything would fall into the place. Add +- and then press TAB for adding separator between rows. Add += and then press TAB for adding separator between header and the table body. Read the Grid tables section of [Pandoc User grid](http://johnmacfarlane.net/pandoc/README.html#tables) for more information.
+	- Use **TAB** to move forward a cell in table, **Shift+TAB** to move backward.
 	- Personally I plan to use grid table as a basis and add command for converting to other table formats if necessary.
 - **Basic Pandoc integration with Pandoc** By integrating [SublimePandoc](https://github.com/jclement/SublimePandoc). Added by [DanielMe](https://github.com/DanielMe/).
 
