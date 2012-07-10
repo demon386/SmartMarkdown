@@ -1,12 +1,20 @@
+"""Utilities function for working with grid table of Pandoc
+
+Terminologies
+
+- Table list :: This is not a list of table, but rather convert the table as a
+  nested python list. Each row is a sub-list in the table list.
+
+"""
+# Author: Muchenxuan Tong <demon386@gmail.com>
+# LICENSE: MIT
+
 import re
 import copy
 
 import sublime
 
 import utilities
-# Author: Muchenxuan Tong <demon386@gmail.com>
-# LICENSE: MIT
-
 
 TABLE_PATTERN = re.compile(r"\s*\|")
 SEPARATOR_PATTERN = re.compile(r"\s*(\+[=-])")
@@ -20,7 +28,7 @@ def convert_table_at_point_as_list(view, from_point):
     -------
     table: list
         A nested list representing the table.
-    indent: "str"
+    indent: "str" (@todo not impelmented yet)
         String of indentation, used in every row.
 
     """
@@ -60,6 +68,8 @@ def convert_table_above_or_below_as_list(view, from_point, above):
 
 
 def convert_row_at_point_as_list(view, from_point):
+    """Convert the row at point as a python list.
+    """
     line_num, _ = view.rowcol(from_point)
     line_text = utilities.text_at_line(view, line_num)
 
@@ -95,6 +105,12 @@ def _convert_row_text_as_list(row_text):
 
 
 def reformat_table_list(table):
+    """Reformat & align the table list.
+
+    After this, every column is of the same length,
+    and every row is of the same number of column.
+
+    """
     cols_num = max([len(row) for row in table])
     cols_length = _get_cols_length(table, cols_num)
 
@@ -119,11 +135,14 @@ def reformat_table_list(table):
 
 
 def convert_table_list_to_str(table):
+    """Convert the python list to str for outputing.
+
+    """
     table_str = ""
     table = copy.deepcopy(table)
     for row in table:
         if SEPARATOR_PATTERN.match(row[0]):
-            row[0] = row[0][1:]
+            row[0] = row[0][1:]  # Remove the mark added in reformat_table_list
             row_str = "+"
             for col_str in row:
                 row_str += col_str + "+"
@@ -136,6 +155,8 @@ def convert_table_list_to_str(table):
 
 
 def _get_cols_length(table, cols_num):
+    """Return the max length of every columns.
+    """
     cols_length = [0] * cols_num
     for row in table:
         for (i, col) in enumerate(row):
@@ -146,6 +167,8 @@ def _get_cols_length(table, cols_num):
 
 
 def get_point_row_and_col(view, from_point):
+    """Return the row and col the current point is in the table.
+    """
     line_num, _ = view.rowcol(from_point)
     line_num -= 1
 
@@ -172,6 +195,8 @@ def get_point_row_and_col(view, from_point):
 
 
 def is_line_separator(view, line_num):
+    """Check if the current line is a separator.
+    """
     text = utilities.text_at_line(view, line_num)
     if text and SEPARATOR_PATTERN.match(text):
         return True
