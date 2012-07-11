@@ -30,6 +30,8 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
         if target not in ["html", "docx", "pdf"]:
             raise Exception("Format %s currently unsopported" % target)
 
+        self.setting = sublime.load_settings("SmartMarkdown.sublime-settings")
+
         encoding = self.view.encoding()
         if encoding == 'Undefined':
             encoding = 'UTF-8'
@@ -67,14 +69,11 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
         #os.unlink(tmp_md.name)
 
     def run_pandoc(self, infile, outfile, args):
-        setting = sublime.load_settings("SmartMarkdown.sublime-settings")
-
-        # Merge the args in settings
-        cmd = ['pandoc'] + setting.get("pandoc_args", []) + args
+        cmd = ['pandoc'] + args
         cmd += [infile, "-o", outfile]
 
         # Merge the path in settings
-        setting_path = setting.get("tex_path", [])
+        setting_path = self.setting.get("tex_path", [])
         for p in setting_path:
             if p not in os.environ["PATH"]:
                 os.environ["PATH"] += ":" + p
@@ -102,12 +101,16 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
         depending on the target.
         TODO: Actually do something sensible here
         """
+        # Merge the args in settings
+        args = self.setting.get("pandoc_args", [])
+
         if target == "pdf":
-            return []
+            args += self.setting.get("pandoc_args_pdf", [])
         if target == "html":
-            return ['-t', 'html5']
+            args += self.setting.get("pandoc_args_html", []) + ['-t', 'html5']
         if target == "docx":
-            return ['-t', 'docx']
+            args += self.setting.get("pandoc_args_docx", []) + ['-t', 'docx']
+        return args
 
     def open_result(self, outfile, target):
         if target == "html":
