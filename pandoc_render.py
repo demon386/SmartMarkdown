@@ -13,8 +13,10 @@ import sublime_plugin
 import webbrowser
 import tempfile
 import os
+import os.path
 import sys
 import subprocess
+from subprocess import PIPE
 
 
 class PandocRenderCommand(sublime_plugin.TextCommand):
@@ -36,6 +38,10 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
         contents = self.view.substr(sublime.Region(0, self.view.size()))
         contents = contents.encode(encoding)
 
+        file_name = self.view.file_name()
+        if file_name:
+            os.chdir(os.path.dirname(file_name))
+
         # write buffer to temporary file
         # This is useful because it means we don't need to save the buffer
         tmp_md = tempfile.NamedTemporaryFile(delete=False, suffix=".md")
@@ -56,22 +62,39 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
         args = self.pandoc_args(target)
         self.run_pandoc(tmp_md.name, output_name, args)
 
-        os.unlink(tmp_md.name)
         if open_after:
             self.open_result(output_name, target)
+        #os.unlink(tmp_md.name)
 
     def run_pandoc(self, infile, outfile, args):
         setting = sublime.load_settings("SmartMarkdown.sublime-settings")
 
+        # Merge the args in settings
         cmd = ['pandoc'] + setting.get("pandoc_args", []) + args
         cmd += [infile, "-o", outfile]
 
+        # Merge the path in settings
         setting_path = setting.get("tex_path", [])
-        os_path = os.environ["PATH"] + ":" + ":".join(setting_path)
+        for p in setting_path:
+            if p not in os.environ["PATH"]:
+                os.environ["PATH"] += ":" + p
+
         try:
-            subprocess.check_call(cmd, env={"PATH": os_path})
+            # Use the current directory as working dir whenever possible
+            file_name = self.view.file_name()
+            if file_name:
+                working_dir = os.path.dirname(file_name)
+                p = subprocess.Popen(cmd, stdout=PIPE, stderr=PIPE,
+                                     cwd=working_dir)
+
+            else:
+                p = subprocess.Popen(cmd, stdout=PIPE, stderr=PIPE)
+            p.wait()
+            out, err = p.communicate()
+            if err:
+                raise Exception("Command: %s\n" % " ".join(cmd) + "\nErrors: " + err)
         except Exception as e:
-            sublime.error_message("Unable to execute Pandoc.  \n\nDetails: {0}".format(e))
+            sublime.error_message("Fail to generate output.\n\b{0}".format(e))
 
     def pandoc_args(self, target):
         """
@@ -92,6 +115,7 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
         elif sys.platform == "win32":
             os.startfile(outfile)
         elif "mac" in sys.platform or "darwin" in sys.platform:
-            subprocess.call(["open", outfile])
+            os.system("open %s" % outfile)
+            print outfile
         elif "posix" in sys.platform or "linux" in sys.platform:
-            subprocess.call(["xdg-open", outfile])
+            os.system("xdg-open %s" % outfile)
