@@ -2,26 +2,26 @@
     {
         "caption": "Pandoc: Render Markdown to temp PDF and View",
         "command": "pandoc_render",
-        "args":{"openAfter":true,   "target":"pdf",    "saveResult":false}
+        "args":{"open_after":true,   "target":"pdf",    "save_result":false}
     },
     {
         "caption": "Pandoc: Render Markdown to temp HTML and View",
         "command": "pandoc_render",
-        "args":{"openAfter":true,   "target":"html",    "saveResult":false}
+        "args":{"open_after":true,   "target":"html",    "save_result":false}
     },
     {
         "caption": "Pandoc: Render Markdown to HTML",
         "command": "pandoc_render",
-        "args":{"openAfter":false,   "target":"html",    "saveResult":true}
+        "args":{"open_after":false,   "target":"html",    "save_result":true}
     },
     {
         "caption": "Pandoc: Render Markdown to PDF",
         "command": "pandoc_render",
-        "args":{"openAfter":false,   "target":"pdf",    "saveResult":true}
+        "args":{"open_after":false,   "target":"pdf",    "save_result":true}
     },
     {
         "caption": "Pandoc: Render Markdown DocX",
         "command": "pandoc_render",
-        "args":{"openAfter":false,   "target":"docx",    "saveResult":true}
+        "args":{"open_after":false,   "target":"docx",    "save_result":true}
     }
 ]
