@@ -24,7 +24,7 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
     def is_visible(self):
         return True
 
-    def run(self, edit, target="pdf", openAfter=True, saveResult=False, additionalArguments=[]):
+    def run(self, edit, target="pdf", open_after=True, save_result=False):
         if target not in ["html", "docx", "pdf"]:
             raise Exception("Format %s currently unsopported" % target)
 
@@ -55,6 +55,8 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
 
         args = self.pandoc_args(target)
         self.run_pandoc(tmp_md.name, output_name, args)
+
+        os.unlink(tmp_md.name)
         if openAfter:
             self.open_result(output_name, target)
 

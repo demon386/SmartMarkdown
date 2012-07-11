@@ -1,0 +1,5 @@
+{
+	/* Please specify the PATH of pdflatex if you wanna generate PDF */
+	"tex_path": ["/usr/local/texlive/2011/bin/x86_64-darwin",
+      		     "/usr/local/texlive/2012/bin/x86_64-darwin"]
+}
