@@ -18,7 +18,7 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 	- Use **TAB** to move forward a cell in table, **Shift+TAB** to move backward.
 	- Personally I plan to use grid table as a basis and add command for converting to other table formats if necessary.
 - **Basic Pandoc integration with Pandoc** By integrating [SublimePandoc](https://github.com/jclement/SublimePandoc). Added by [DanielMe](https://github.com/DanielMe/).
-	- **Note**: If you need to generate PDF output, please make sure you have pdflatex available ([MacTEX](http://www.tug.org/mactex/2012/)). Please also specify "tex_path" in the package settings (Preference - Package Settings - SmartMarkdown - Settings - User (see Settings - Default as an example.))
+	- **Note**: If you need to generate PDF output, please make sure you have pdflatex available ([MacTeX](http://www.tug.org/mactex/2012/) for Mac, or TeX Live for other OS). Please also specify "tex_path" in the package settings (Preference - Package Settings - SmartMarkdown - Settings - User (see Settings - Default as an example.))
 
 ## Todo
 - **Embeded R & Python Code for reproducible research**
