@@ -24,7 +24,7 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
     def is_visible(self):
         return True
 
-    def run(self, edit, target="pdf", openAfter=True, saveResult=False, additionalArguments=[]):
+    def run(self, edit, target="pdf", open_after=True, save_result=False):
         if target not in ["html", "docx", "pdf"]:
             raise Exception("Format %s currently unsopported" % target)
 
@@ -44,7 +44,7 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
 
         # output file...
         suffix = "." + target
-        if saveResult:
+        if save_result:
             output_name = os.path.splitext(self.view.file_name())[0] + suffix
             if not self.view.file_name():
                 raise Exception("Please safe the buffer before trying to export with pandoc.")
@@ -55,14 +55,21 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
 
         args = self.pandoc_args(target)
         self.run_pandoc(tmp_md.name, output_name, args)
-        if openAfter:
+
+        os.unlink(tmp_md.name)
+        if open_after:
             self.open_result(output_name, target)
 
     def run_pandoc(self, infile, outfile, args):
-        cmd = ['pandoc'] + args
+        setting = sublime.load_settings("SmartMarkdown.sublime-settings")
+
+        cmd = ['pandoc'] + setting.get("pandoc_args", []) + args
         cmd += [infile, "-o", outfile]
+
+        setting_path = setting.get("tex_path", [])
+        os_path = os.environ["PATH"] + ":" + ":".join(setting_path)
         try:
-            subprocess.call(cmd)
+            subprocess.check_call(cmd, env={"PATH": os_path})
         except Exception as e:
             sublime.error_message("Unable to execute Pandoc.  \n\nDetails: {0}".format(e))
 
@@ -84,7 +91,7 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
             webbrowser.open_new_tab(outfile)
         elif sys.platform == "win32":
             os.startfile(outfile)
-        elif sys.platform == "mac":
+        elif "mac" in sys.platform or "darwin" in sys.platform:
             subprocess.call(["open", outfile])
         elif "posix" in sys.platform or "linux" in sys.platform:
             subprocess.call(["xdg-open", outfile])

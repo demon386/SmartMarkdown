@@ -1,36 +1,67 @@
 [
     {
-        "id": "tools",
+        "caption": "Preferences",
+        "mnemonic": "n",
+        "id": "preferences",
         "children":
         [
             {
-                "caption": "Pandoc",
+                "caption": "Package Settings",
+                "mnemonic": "P",
+                "id": "package-settings",
                 "children":
                 [
                     {
-                        "caption": "Render Markdown to temporary PDF and View",
-                        "command": "pandoc_render",
-                        "args":{"openAfter":true,   "target":"pdf",    "saveResult":false}
-                    },
-                    {
-                        "caption": "Render Markdown to temporary HTML and View",
-                        "command": "pandoc_render",
-                        "args":{"openAfter":true,   "target":"html",    "saveResult":false}
-                    },
-                    {
-                        "caption": "Render Markdown to PDF",
-                        "command": "pandoc_render",
-                        "args":{"openAfter":false,   "target":"pdf",    "saveResult":true}
-                    },
-                    {
-                        "caption": "Render Markdown to HTML",
-                        "command": "pandoc_render",
-                        "args":{"openAfter":false,   "target":"html",    "saveResult":true}
-                    },
-                    {
-                        "caption": "Render Markdown DocX",
-                        "command": "pandoc_render",
-                        "args":{"openAfter":false,   "target":"docx",    "saveResult":true}
+                        "caption": "SmartMarkdown",
+                        "children":
+                        [
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/SmartMarkdown/SmartMarkdown.sublime-settings"
+                                },
+                                "caption": "Settings – Default"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/User/SmartMarkdown.sublime-settings"
+                                },
+                                "caption": "Settings – User"
+                            },
+                            { "caption": "-" },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/SmartMarkdown/Default.sublime-keymap"
+                                },
+                                "caption": "Key Bindings – Default"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/User/Default (OSX).sublime-keymap",
+                                    "platform": "OSX"
+                                },
+                                "caption": "Key Bindings – User"
+                            },
+                            {
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/User/Default (Linux).sublime-keymap",
+                                    "platform": "Linux"
+                                },
+                                "caption": "Key Bindings – User"
+                            },
+                            {
+                                "command": "open_file",
+                                "args": {
+                                    "file": "${packages}/User/Default (Windows).sublime-keymap",
+                                    "platform": "Windows"
+                                },
+                                "caption": "Key Bindings – User"
+                            }
+                        ]
                     }
                 ]
             }
