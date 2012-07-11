@@ -2,8 +2,8 @@
 
 Terminologies
 
-- Table list :: This is not a list of table, but rather convert the table as a
-  nested python list. Each row is a sub-list in the table list.
+- Table list :: This is not a list of tables, but rather converting the table as
+a nested python list. Each row is a sub-list in the table list.
 
 """
 # Author: Muchenxuan Tong <demon386@gmail.com>

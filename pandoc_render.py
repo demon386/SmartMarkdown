@@ -34,6 +34,7 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
         elif encoding == 'Western (Windows 1252)':
             encoding = 'windows-1252'
         contents = self.view.substr(sublime.Region(0, self.view.size()))
+        contents = contents.encode(encoding)
 
         # write buffer to temporary file
         # This is useful because it means we don't need to save the buffer
@@ -87,4 +88,3 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
             subprocess.call(["open", outfile])
         elif "posix" in sys.platform or "linux" in sys.platform:
             subprocess.call(["xdg-open", outfile])
-

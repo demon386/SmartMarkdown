@@ -14,7 +14,7 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 	- Use **Ctrl+c Ctrl+f** to move to the next headline (same level or higher level); **Ctrl+c Ctrl+b** to the previous one.
 - **Smart table**
 	- Currently, the smart table suppose only the Grid table format of [Pandoc](http://johnmacfarlane.net/pandoc/README.html).
-	- The behavior is like the table in Org-mode. If you are unfamiliar with Org-mode, just use | (vertical line) to separate the column (e.g. | header1 | header 2 |), and use the **TAB** to reformat the table at point. Everything would fall into the place. Add +- and then press TAB for adding separator between rows. Add += and then press TAB for adding separator between header and the table body. Read the Grid tables section of [Pandoc User grid](http://johnmacfarlane.net/pandoc/README.html#tables) for more information.
+	- The behavior is like the table in Org-mode. If you are unfamiliar with Org-mode, just use | (vertical line) to separate the column (e.g. | header1 | header 2 |), and use the **TAB** to reformat the table at point. Everything would fall into the place. Add +- and then press TAB for adding separator between rows. Add += and then press TAB for adding separator between header and the table body. Read the Grid tables section of [Pandoc Userg's Guide](http://johnmacfarlane.net/pandoc/README.html#tables) for more information.
 	- Use **TAB** to move forward a cell in table, **Shift+TAB** to move backward.
 	- Personally I plan to use grid table as a basis and add command for converting to other table formats if necessary.
 - **Basic Pandoc integration with Pandoc** By integrating [SublimePandoc](https://github.com/jclement/SublimePandoc). Added by [DanielMe](https://github.com/DanielMe/).
@@ -39,7 +39,7 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 ## For Developers
 - Whenever possible, please obey the [PEP 8](http://www.python.org/dev/peps/pep-0008/) style guide. This can be checked easily with the plugin SublimeLinter.
 - git-flow is recommended (but not enforced) as a development work flow. For instruction please read [Why aren't you using git-flow?](http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/). To adapt it, a command line tool [gitflow](https://github.com/nvie/gitflow/) is highly recommended.
-- Please fork the develop branch, it's usually newer than master. the master branch is for users.
+- Please work on the develop branch, it's newer than master. the master branch is for users.
 
 # License
 The plugin is licensed under the MIT license.
