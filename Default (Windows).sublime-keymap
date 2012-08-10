@@ -1,0 +1,26 @@
+[
+    { "keys": ["ctrl+;", "ctrl+n"], "command": "headline_move",
+      "args": {"forward": true, "same_level": false}, "context":
+        [
+            { "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
+        ]
+    },
+    { "keys": ["ctrl+;", "ctrl+p"], "command": "headline_move",
+      "args": {"forward": false, "same_level": false}, "context":
+        [
+            { "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
+        ]
+    },
+    { "keys": ["ctrl+;", "ctrl+f"], "command": "headline_move",
+      "args": {"forward": true, "same_level": true}, "context":
+        [
+            { "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
+        ]
+    },
+    { "keys": ["ctrl+;", "ctrl+b"], "command": "headline_move",
+      "args": {"forward": false, "same_level": true}, "context":
+        [
+            { "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
+        ]
+    }
+]
