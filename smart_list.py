@@ -16,25 +16,26 @@ class SmartListCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         for region in self.view.sel():
             line_region = self.view.line(region)
-            line_to_point_region = sublime.Region(line_region.a,
-                                                  region.a)
-            line_content = self.view.substr(line_to_point_region)
+            # the content before point at the current line.
+            before_point_region = sublime.Region(line_region.a,
+                                                 region.a)
+            before_point_content = self.view.substr(before_point_region)
 
             # Disable smart list when folded.
             folded = False
             for i in self.view.folded_regions():
-                if i.contains(line_to_point_region):
+                if i.contains(before_point_region):
                     self.view.insert(edit, region.a, '\n')
                     folded = True
             if folded:
                 break
 
-            match = EMPTY_LIST_PATTERN.match(line_content)
+            match = EMPTY_LIST_PATTERN.match(before_point_content)
             if match:
-                self.view.erase(edit, line_to_point_region)
+                self.view.erase(edit, before_point_region)
                 break
 
-            match = ORDER_LIST_PATTERN.match(line_content)
+            match = ORDER_LIST_PATTERN.match(before_point_content)
             if match:
                 insert_text = match.group(1) + \
                               str(int(match.group(2)) + 1) + \
@@ -42,7 +43,7 @@ class SmartListCommand(sublime_plugin.TextCommand):
                 self.view.insert(edit, region.a, "\n" + insert_text)
                 break
 
-            match = UNORDER_LIST_PATTERN.match(line_content)
+            match = UNORDER_LIST_PATTERN.match(before_point_content)
             if match:
                 insert_text = match.group(1) + match.group(2)
                 self.view.insert(edit, region.a, "\n" + insert_text)
