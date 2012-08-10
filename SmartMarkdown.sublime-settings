@@ -1,8 +1,9 @@
 {
-	/* Please specify the PATH of pdflatex if you wanna generate PDF */
-	"tex_path": ["/usr/local/texlive/2011/bin/x86_64-darwin",
-      		     "/usr/local/texlive/2012/bin/x86_64-darwin"],
-    /* Provide your settings here as a list e.g.: ["--latex-engine=xelatex", "--toc"]*/
+    /* Please specify the PATH of pdflatex if you wanna generate PDF */
+    "tex_path": ["/usr/local/texlive/2011/bin/x86_64-darwin",
+                 "/usr/local/texlive/2012/bin/x86_64-darwin"],
+    /* Provide your arguments here as a list e.g.: ["--latex-engine=xelatex", "--toc"]
+    arguments that are separated by space must be in separate slots. e.g. ["-H", "template.tex"] */
     "pandoc_args": [],
     "pandoc_args_pdf": [],
     "pandoc_args_html": [],
