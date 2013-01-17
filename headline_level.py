@@ -1,3 +1,5 @@
+"""This file is contributed by [David Smith](https://github.com/djs070)
+"""
 import sublime
 import sublime_plugin
 

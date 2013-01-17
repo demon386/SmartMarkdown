@@ -12,6 +12,8 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 - **Move between headlines**.
 	- Use **Ctrl+c Ctrl+n** to move to the next headline (any level); **Ctrl+c Ctrl+p** to the previous one, for Mac. (**Ctrl+; Ctrl+n** and **Ctrl+; Ctrl+p** for Windows and Linux)
 	- Use **Ctrl+c Ctrl+f** to move to the next headline (same level or higher level); **Ctrl+c Ctrl+b** to the previous one, for Mac. (**Ctrl+; Ctrlf** and **Ctrl+; Ctrl+b** for Windows and Linux)
+- **Adjust headline level** Added by [David Smith](https://github.com/djs070).
+    - **Super+Shift+,** for decreasing and **Super+Shift+.** for increasing headline levels.
 - **Smart table**
 	- Currently, the smart table suppose only the Grid table format of [Pandoc](http://johnmacfarlane.net/pandoc/README.html). Use monospaced fonts, otherwise it would appear bizarre.
 	- The behavior is like the table in Org-mode. If you are unfamiliar with Org-mode, just use | (vertical line) to separate the column (e.g. | header1 | header 2 |), and use the **TAB** to reformat the table at point. Everything would fall into the place. Add +- and then press TAB for adding separator between rows. Add += and then press TAB for adding separator between header and the table body. Read the Grid tables section of [Pandoc Userg's Guide](http://johnmacfarlane.net/pandoc/README.html#tables) for more information.
@@ -26,6 +28,7 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 - ...
 
 ## What's new
+### v0.1.6: Add support and bindings for headline level changing. (added by [David Smith](https://github.com/djs070).) The key bindings are: **Super+Shift+,** for decreasing and **Super+Shift+.** for increasing.
 ### v0.1.5: Basic smart table (grid table) support added. Basic Pandoc intergration (added by [DanielMe](https://github.com/DanielMe/).)
 ### v0.1.3: Add support for global headling folding / unfolding.
 ### v0.1.2: Move between headlines supported!
