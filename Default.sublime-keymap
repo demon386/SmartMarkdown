@@ -54,5 +54,19 @@
 			{ "key": "following_text", "operator": "regex_contains", "operand": "\\s*(\\||\\+[-=])",
 			  "match_all": true}
 		]
+	},
+	{
+		"keys": ["super+shift+."], "command": "change_heading_level",
+		"args": {"up": true}, "context":
+			[
+				{"key": "selector", "operator": "equal", "operand": "text.html.markdown"}
+			]
+	},
+	{
+		"keys": ["super+shift+,"], "command": "change_heading_level",
+		"args": {"up": false}, "context":
+			[
+				{"key": "selector", "operator": "equal", "operand": "text.html.markdown"}
+			]
 	}
 ]
