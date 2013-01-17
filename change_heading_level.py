@@ -1,4 +1,6 @@
-import sublime, sublime_plugin
+import sublime
+import sublime_plugin
+
 
 class ChangeHeadingLevelCommand(sublime_plugin.TextCommand):
     def run(self, edit, up=True):
@@ -12,6 +14,6 @@ class ChangeHeadingLevelCommand(sublime_plugin.TextCommand):
             else:
                 # Decrease heading level
                 if self.view.substr(line)[0] == '#':
-                    self.view.erase( edit, sublime.Region(line.begin(), line.begin() + 1))
+                    self.view.erase(edit, sublime.Region(line.begin(), line.begin() + 1))
                     if self.view.substr(line)[0] == ' ':
-                        self.view.erase( edit, sublime.Region(line.begin(), line.begin() + 1))
+                        self.view.erase(edit, sublime.Region(line.begin(), line.begin() + 1))
