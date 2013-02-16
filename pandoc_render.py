@@ -93,7 +93,7 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
             if err:
                 raise Exception("Command: %s\n" % " ".join(cmd) + "\nErrors: " + err)
         except Exception as e:
-            sublime.error_message("Fail to generate output.\n\b{0}".format(e))
+            sublime.error_message("Fail to generate output.\n{0}".format(e))
 
     def pandoc_args(self, target):
         """
@@ -119,6 +119,6 @@ class PandocRenderCommand(sublime_plugin.TextCommand):
             os.startfile(outfile)
         elif "mac" in sys.platform or "darwin" in sys.platform:
             os.system("open %s" % outfile)
-            print outfile
+            print(outfile)
         elif "posix" in sys.platform or "linux" in sys.platform:
             os.system("xdg-open %s" % outfile)

@@ -13,7 +13,8 @@ import re
 import sublime
 import sublime_plugin
 
-import headline
+from . import headline
+from .utilities import is_region_void
 
 
 HEADLINE_PATTERN = re.compile(r'^(#+)\s.*')
@@ -81,7 +82,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
         child_headline_region, _ = headline.find_headline(self.view, region.a, level, True, \
                                                           headline.MATCH_CHILD)
 
-        while (child_headline_region is not None and child_headline_region.b <= region.b):
+        while (not is_region_void(child_headline_region) and child_headline_region.b <= region.b):
             child_content_region = headline.region_of_content_of_headline_at_point(self.view,
                                                                                    child_headline_region.a)
             if child_content_region is not None:
@@ -117,7 +118,7 @@ class GlobalFoldingCommand(SmartFoldingCommand):
                                                headline.ANY_LEVEL, True)
         # Treating no heeadline as folded, since unfolded all makes
         # no harm in this situation.
-        if not region:
+        if is_region_void(region):
             return True
 
         point = region.a
@@ -125,7 +126,7 @@ class GlobalFoldingCommand(SmartFoldingCommand):
         while (point is not None and region):
             region = headline.region_of_content_of_headline_at_point(self.view, \
                                                                      point)
-            if region:
+            if not is_region_void(region):
                 point = region.b
             if not self.is_region_totally_folded(region):
                 return False
@@ -134,7 +135,7 @@ class GlobalFoldingCommand(SmartFoldingCommand):
                                                        headline.ANY_LEVEL, \
                                                        True,
                                                        skip_headline_at_point=True)
-                if region:
+                if not is_region_void(region):
                     point = region.a
         return True
 
@@ -155,14 +156,14 @@ class GlobalFoldingCommand(SmartFoldingCommand):
         while (point is not None and region):
             region = headline.region_of_content_of_headline_at_point(self.view, \
                                                                      point)
-            if region:
+            if not is_region_void(region):
                 point = region.b
                 self.view.fold(region)
             region, level = headline.find_headline(self.view, point, \
                                                    headline.ANY_LEVEL,
                                                    True, \
                                                    skip_headline_at_point=True)
-            if region:
+            if not is_region_void(region):
                 point = region.a
         self.adjust_cursors_and_view()
 

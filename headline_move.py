@@ -8,7 +8,8 @@ The feature is borrowed from [Org-mode](http://org-mode.org).
 import sublime
 import sublime_plugin
 
-import headline
+from . import headline
+from .utilities import is_region_void
 
 
 class HeadlineMoveCommand(sublime_plugin.TextCommand):
@@ -43,7 +44,7 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
                                                      skip_headline_at_point=True,\
                                                      skip_folded=True)
 
-            if not match_region:
+            if is_region_void(match_region):
                 return
             new_sel.append(sublime.Region(match_region.a, match_region.a))
 
