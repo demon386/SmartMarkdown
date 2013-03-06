@@ -12,7 +12,7 @@
 	{ "keys": ["enter"], "command": "smart_list", "context":
 		[
 			{ "key": "selector", "operator": "equal", "operand": "text.html.markdown" },
-			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*([-+*]|\\d+\\.+)\\s+" }
+			{ "key": "preceding_text", "operator": "regex_contains", "operand": "^\\s*([-+\\**]|\\d+\\.+)\\s+" }
 		]
 	},
 	{ "keys": ["enter"], "command": "smart_list", "context":
