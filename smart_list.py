@@ -8,8 +8,8 @@ import sublime_plugin
 
 
 ORDER_LIST_PATTERN = re.compile(r"(\s*)(\d+)(\.\s+)\S+")
-UNORDER_LIST_PATTERN = re.compile(r"(\s*[-+*]+)(\s+)\S+")
-EMPTY_LIST_PATTERN = re.compile(r"(\s*([-+*]|\d+\.+))\s+$")
+UNORDER_LIST_PATTERN = re.compile(r"(\s*[-+\**]+)(\s+)\S+")
+EMPTY_LIST_PATTERN = re.compile(r"(\s*([-+\**]|\d+\.+))\s+$")
 
 
 class SmartListCommand(sublime_plugin.TextCommand):
