@@ -14,3 +14,10 @@ def text_at_line(view, line_num):
     point = view.text_point(line_num, 0)
     line_region = view.line(point)
     return view.substr(line_region)
+
+def is_region_void(region):
+    if region == None:
+        return True
+    if region.a == -1 and region.b == -1:
+        return True
+    return False

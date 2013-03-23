@@ -8,9 +8,8 @@ Terminologies
 # Author: Muchenxuan Tong <demon386@gmail.com>
 
 import re
-
 import sublime
-
+from .utilities import is_region_void
 
 MATCH_PARENT = 1   # Match headlines at the same or higher level
 MATCH_CHILD = 2    # Match headlines at the same or lower level
@@ -36,7 +35,7 @@ def region_of_content_of_headline_at_point(view, from_point):
                                      level, \
                                      True, \
                                      MATCH_PARENT)
-    if next_headline != None:
+    if not is_region_void(next_headline):
         end_pos = next_headline.a - 1
     else:
         end_pos = view.size()
@@ -62,7 +61,7 @@ def headline_and_level_at_point(view, from_point, search_above_and_down=False):
                                            ANY_LEVEL,
                                            False,
                                            skip_folded=True)
-        if headline_region:
+        if not is_region_void(headline_region):
             line_content, level = headline_and_level_at_point(view,\
                                                               headline_region.a)
         # Search down
@@ -72,7 +71,7 @@ def headline_and_level_at_point(view, from_point, search_above_and_down=False):
                                                ANY_LEVEL,
                                                True,
                                                skip_folded=True)
-            if headline_region:
+            if not is_region_void(headline_region):
                 line_content, level = headline_and_level_at_point(view, headline_region.a)
 
     return line_content, level
@@ -168,11 +167,11 @@ def find_headline(view, from_point, level, forward=True, \
                                                                 skip_folded)
 
     if skip_folded:
-        while (match_region and _is_region_folded(match_region, view)):
+        while (_is_region_folded(match_region, view)):
             from_point = match_region.b
             match_region = view.find(re_string, from_point)
 
-    if match_region:
+    if not is_region_void(match_region):
         if not is_scope_headline(view, match_region.a):
             return find_headline(view, match_region.a, level, forward, \
                                  match_type, True, skip_folded)

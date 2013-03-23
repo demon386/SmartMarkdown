@@ -8,7 +8,8 @@ The feature is borrowed from [Org-mode](http://org-mode.org).
 import sublime
 import sublime_plugin
 
-import headline
+from . import headline
+from .utilities import is_region_void
 
 
 class HeadlineMoveCommand(sublime_plugin.TextCommand):
@@ -30,6 +31,8 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
                 _, level = headline.headline_and_level_at_point(self.view,\
                                                                 region.a,
                                                                 search_above_and_down=True)
+                if level is None:
+                    return
             else:
                 level = headline.ANY_LEVEL
 
@@ -40,13 +43,9 @@ class HeadlineMoveCommand(sublime_plugin.TextCommand):
                                                      level_type, \
                                                      skip_headline_at_point=True,\
                                                      skip_folded=True)
-            if forward:
-                if not match_region:
-                    size = self.view.size()
-                    match_region = sublime.Region(size, size)
-            else:
-                if not match_region:
-                    match_region = sublime.Region(0, 0)
+
+            if is_region_void(match_region):
+                return
             new_sel.append(sublime.Region(match_region.a, match_region.a))
 
         self.adjust_view(new_sel)

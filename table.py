@@ -14,7 +14,7 @@ import copy
 
 import sublime
 
-import utilities
+from . import utilities
 
 TABLE_PATTERN = re.compile(r"\s*\|")
 SEPARATOR_PATTERN = re.compile(r"\s*(\+[=-])")
