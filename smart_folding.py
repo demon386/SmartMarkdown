@@ -13,8 +13,12 @@ import re
 import sublime
 import sublime_plugin
 
-from . import headline
-from .utilities import is_region_void
+try:
+    from . import headline
+    from .utilities import is_region_void
+except ValueError:
+    import headline
+    from utilities import is_region_void
 
 
 HEADLINE_PATTERN = re.compile(r'^(#+)\s.*')

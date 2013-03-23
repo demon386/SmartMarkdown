@@ -9,7 +9,11 @@ Terminologies
 
 import re
 import sublime
-from .utilities import is_region_void
+
+try:
+    from .utilities import is_region_void
+except ValueError:
+    from utilities import is_region_void
 
 MATCH_PARENT = 1   # Match headlines at the same or higher level
 MATCH_CHILD = 2    # Match headlines at the same or lower level
