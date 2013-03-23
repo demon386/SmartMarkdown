@@ -1,9 +1,9 @@
-# SmartMarkdown for Sublime Text 2
+# SmartMarkdown for Sublime Text 2 & 3
 
 Author: Muchenxuan Tong (demon386@gmail.com)
 
 ## Introduction
-The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more powerful. Ideally, I hope we can bring several amazing features of [Org-mode](http://org-mode.org) of Emacs into Sublime Text 2.
+The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more powerful. Ideally, I hope we can bring several amazing features of [Org-mode](http://org-mode.org) of Emacs into Sublime Text.
 
 ## Done
 - **Smart Headline folding / unfolding**. Right now you can fold / unfold headlines by pressing **TAB** on it. I assume you use the following formats: # Section; ## Subsection; ### Subsubsection ...
@@ -28,6 +28,7 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 - ...
 
 ## What's new
+### v0.2: Support for Sublime Text 3 (added by [UNOwen](https://github.com/UNOwen).)
 ### v0.1.6: Add support and bindings for headline level changing. (added by [David Smith](https://github.com/djs070).) The key bindings are: **Super+Shift+,** for decreasing and **Super+Shift+.** for increasing.
 ### v0.1.5: Basic smart table (grid table) support added. Basic Pandoc intergration (added by [DanielMe](https://github.com/DanielMe/).)
 ### v0.1.3: Add support for global headling folding / unfolding.
