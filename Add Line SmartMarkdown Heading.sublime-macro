@@ -1,0 +1,5 @@
+[
+    {"command": "move_to", "args": {"to": "hardeol"}},
+    {"command": "move_to", "args": {"to": "eol"}},
+    {"command": "insert", "args": {"characters": "\n"}}
+]

@@ -22,5 +22,11 @@
         [
             { "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
         ]
+    },
+    { "keys": ["ctrl+enter"], "command": "run_macro_file",
+      "args": {"file": "res://Packages/SmartMarkdown/Add Line SmartMarkdown Heading.sublime-macro"}, "context":
+        [
+            { "key": "selector", "operator": "equal", "operand": "markup.heading.markdown" }
+        ]
     }
 ]
