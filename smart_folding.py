@@ -65,8 +65,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
         if self.is_region_totally_folded(content_region):
             self.unfold_yet_fold_subheads(content_region, level)
         else:
-            self.view.fold(sublime.Region(sublime.Region.begin(content_region) - 1, \
-                                          sublime.Region.end(content_region)))
+            self.view.fold(sublime.Region(content_region.a - 1, content_region.b))
         return True
 
     def is_region_totally_folded(self, region):
@@ -91,8 +90,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
             child_content_region = headline.region_of_content_of_headline_at_point(self.view,
                                                                                    child_headline_region.a)
             if child_content_region is not None:
-                self.view.fold(sublime.Region(sublime.Region.begin(child_content_region) - 1, \
-                                              sublime.Region.end(child_content_region)))
+                self.view.fold(sublime.Region(child_content_region.a - 1, child_content_region.b))
                 search_start_point = child_content_region.b
             else:
                 search_start_point = child_headline_region.b
@@ -164,8 +162,7 @@ class GlobalFoldingCommand(SmartFoldingCommand):
                                                                      point)
             if not is_region_void(region):
                 point = region.b
-                self.view.fold(sublime.Region(sublime.Region.begin(region) - 1, \
-                                              sublime.Region.end(region)))
+                self.view.fold(sublime.Region(region.a - 1, region.b))
             region, level = headline.find_headline(self.view, point, \
                                                    headline.ANY_LEVEL,
                                                    True, \
