@@ -24,6 +24,21 @@ except ValueError:
 HEADLINE_PATTERN = re.compile(r'^(#+)\s.*')
 
 
+class SmartNewLineCommand(sublime_plugin.TextCommand):
+    """Changes behavior of default 'insert line after'
+       Puts new line after folding mark if any.
+    """
+    def run(self, edit):
+        self.view.run_command("move_to", { "to": "hardeol"})
+        self.view.run_command("move_to", { "to": "eol"})
+        point = self.view.full_line(self.view.sel()[0])
+        if headline._is_region_folded(point.b + 1, self.view):
+            self.view.run_command("move_to", { "to": "eof"})
+            self.view.run_command("insert", {"characters": "\n"})
+        else:
+            self.view.run_command("insert", {"characters": "\n"})
+
+
 class SmartFoldingCommand(sublime_plugin.TextCommand):
     """Smart folding is used to fold / unfold headline at the point.
 
