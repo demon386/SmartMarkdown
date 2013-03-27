@@ -29,15 +29,16 @@ class SmartNewLineCommand(sublime_plugin.TextCommand):
        Puts new line after folding mark if any.
     """
     def run(self, edit):
-        self.view.run_command("move_to", { "to": "hardeol"})
-        self.view.run_command("move_to", { "to": "eol"})
-        point = self.view.full_line(self.view.sel()[0])
-        if headline._is_region_folded(point.b + 1, self.view):
-            self.view.run_command("move_to", { "to": "eof"})
-            self.view.run_command("insert", {"characters": "\n"})
-        else:
-            self.view.run_command("insert", {"characters": "\n"})
-
+        points = []
+        for s in self.view.sel():
+            r = self.view.full_line(s)
+            if headline._is_region_folded(r.b + 1, self.view):
+                i = headline.region_of_content_of_headline_at_point(self.view, s.b)
+                points.append(i)
+            self.view.insert(edit, i.b, '\n')
+        self.view.sel().clear()
+        for p in points:
+            self.view.sel().add(p.b + 1)
 
 class SmartFoldingCommand(sublime_plugin.TextCommand):
     """Smart folding is used to fold / unfold headline at the point.
