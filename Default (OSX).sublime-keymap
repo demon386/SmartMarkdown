@@ -22,5 +22,10 @@
         [
             { "key": "selector", "operator": "equal", "operand": "text.html.markdown" }
         ]
+    },
+    { "keys": ["ctrl+enter"], "command": "smart_new_line", "context":
+        [
+            { "key": "selector", "operator": "equal", "operand": "markup.heading.markdown" }
+        ]
     }
 ]

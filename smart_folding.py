@@ -13,12 +13,32 @@ import re
 import sublime
 import sublime_plugin
 
-from . import headline
-from .utilities import is_region_void
+try:
+    from . import headline
+    from .utilities import is_region_void
+except ValueError:
+    import headline
+    from utilities import is_region_void
 
 
 HEADLINE_PATTERN = re.compile(r'^(#+)\s.*')
 
+
+class SmartNewLineCommand(sublime_plugin.TextCommand):
+    """Changes behavior of default 'insert line after'
+       Puts new line after folding mark if any.
+    """
+    def run(self, edit):
+        points = []
+        for s in self.view.sel():
+            r = self.view.full_line(s)
+            if headline._is_region_folded(r.b + 1, self.view):
+                i = headline.region_of_content_of_headline_at_point(self.view, s.b)
+                points.append(i)
+            self.view.insert(edit, i.b, '\n')
+        self.view.sel().clear()
+        for p in points:
+            self.view.sel().add(p.b + 1)
 
 class SmartFoldingCommand(sublime_plugin.TextCommand):
     """Smart folding is used to fold / unfold headline at the point.
@@ -61,7 +81,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
         if self.is_region_totally_folded(content_region):
             self.unfold_yet_fold_subheads(content_region, level)
         else:
-            self.view.fold(content_region)
+            self.view.fold(sublime.Region(content_region.a - 1, content_region.b))
         return True
 
     def is_region_totally_folded(self, region):
@@ -86,7 +106,7 @@ class SmartFoldingCommand(sublime_plugin.TextCommand):
             child_content_region = headline.region_of_content_of_headline_at_point(self.view,
                                                                                    child_headline_region.a)
             if child_content_region is not None:
-                self.view.fold(child_content_region)
+                self.view.fold(sublime.Region(child_content_region.a - 1, child_content_region.b))
                 search_start_point = child_content_region.b
             else:
                 search_start_point = child_headline_region.b
@@ -158,7 +178,7 @@ class GlobalFoldingCommand(SmartFoldingCommand):
                                                                      point)
             if not is_region_void(region):
                 point = region.b
-                self.view.fold(region)
+                self.view.fold(sublime.Region(region.a - 1, region.b))
             region, level = headline.find_headline(self.view, point, \
                                                    headline.ANY_LEVEL,
                                                    True, \

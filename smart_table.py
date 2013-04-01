@@ -10,7 +10,10 @@ Markdown itself doesn't support grid table, yet pandoc does.
 import sublime
 import sublime_plugin
 
-from . import table
+try:
+    from . import table
+except ValueError:
+    import table
 
 
 class SmartTable(sublime_plugin.TextCommand):
