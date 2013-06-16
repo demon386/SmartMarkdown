@@ -5,6 +5,21 @@ Author: Muchenxuan Tong (demon386@gmail.com)
 ## Introduction
 The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more powerful. Ideally, I hope we can bring several amazing features of [Org-mode](http://org-mode.org) of Emacs into Sublime Text.
 
+## What's new
+### v0.3: Adjust the position of folding mark to the end of headline. (added by [alehandrof](https://github.com/alehandrof))
+### v0.2: Support for Sublime Text 3 (added by [UNOwen](https://github.com/UNOwen).)
+### v0.1.6: Add support and bindings for headline level changing. (added by [David Smith](https://github.com/djs070).) The key bindings are: **Super+Shift+,** for decreasing and **Super+Shift+.** for increasing.
+### v0.1.5: Basic smart table (grid table) support added. Basic Pandoc intergration (added by [DanielMe](https://github.com/DanielMe/).)
+### v0.1.3: Add support for global headling folding / unfolding.
+### v0.1.2: Move between headlines supported!
+- Use **Ctrl+c Ctrl+n** to move to the next headline (any level); **Ctrl+c Ctrl+p** to the previous one.
+- Use **Ctrl+c Ctrl+f** to move to the next headline (same level or higher level); **Ctrl+c Ctrl+b** to the previous one.
+- Fixed a bug on bullet list. Thanks to quodlibet (fixed in v0.1.1).
+
+### v0.1.0: Created!
+- Smart Headline folding / unfolding is supported.
+- Smart Lists is supported.
+
 ## Done
 - **Smart Headline folding / unfolding**. Right now you can fold / unfold headlines by pressing **TAB** on it. I assume you use the following formats: # Section; ## Subsection; ### Subsubsection ...
 - **Global Headline Folding / unfolding**. **Shift+Tab** to Fold / Unfold all at any position.
@@ -27,19 +42,6 @@ The plugin is aimed at making editing Markdown in Sublime Text 2 easier and more
 - **Better Pandoc integration** Actual support for different Pandoc command line options etc.
 - ...
 
-## What's new
-### v0.2: Support for Sublime Text 3 (added by [UNOwen](https://github.com/UNOwen).)
-### v0.1.6: Add support and bindings for headline level changing. (added by [David Smith](https://github.com/djs070).) The key bindings are: **Super+Shift+,** for decreasing and **Super+Shift+.** for increasing.
-### v0.1.5: Basic smart table (grid table) support added. Basic Pandoc intergration (added by [DanielMe](https://github.com/DanielMe/).)
-### v0.1.3: Add support for global headling folding / unfolding.
-### v0.1.2: Move between headlines supported!
-- Use **Ctrl+c Ctrl+n** to move to the next headline (any level); **Ctrl+c Ctrl+p** to the previous one.
-- Use **Ctrl+c Ctrl+f** to move to the next headline (same level or higher level); **Ctrl+c Ctrl+b** to the previous one.
-- Fixed a bug on bullet list. Thanks to quodlibet (fixed in v0.1.1).
-
-### v0.1.0: Created!
-- Smart Headline folding / unfolding is supported.
-- Smart Lists is supported.
 
 ## For Developers
 - Whenever possible, please obey the [PEP 8](http://www.python.org/dev/peps/pep-0008/) style guide. This can be checked easily with the plugin SublimeLinter.
